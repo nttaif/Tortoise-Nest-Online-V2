@@ -11,7 +11,8 @@ coverage
 out/
 build
 dist
-
+# NestJS build files
+server/dist/
 # Misc
 .DS_Store
 *.pem
@@ -30,7 +31,7 @@ yarn-error.log*
 
 # Turbo
 .turbo
-
+turbo.lock
 # Vercel
 .vercel
 .vscode
