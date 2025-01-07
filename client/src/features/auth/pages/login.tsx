@@ -1,13 +1,6 @@
-import LoginForm from "../component/LoginForm";
+import { LoginForm } from '../component/LoginForm'
 
-// src/features/auth/pages/login.tsx
-const LoginPage = () => {
-    return (
-      <div>
-        <LoginForm></LoginForm>
-      </div>
-    );
-  };
-  
-  export default LoginPage;
-  
+export default function LoginPage() {
+  return <LoginForm />
+}
+

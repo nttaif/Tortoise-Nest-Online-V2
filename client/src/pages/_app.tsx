@@ -6,7 +6,6 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <div>
       <header>
         <nav>
-          <a href="/">Home</a>
           <a href="/about">About</a>
         </nav>
       </header>

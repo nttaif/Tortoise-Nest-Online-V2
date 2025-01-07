@@ -1,0 +1,35 @@
+{
+  "name": "tno",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "build:api": "turbo build --filter=api",
+    "build:client": "turbo build --filter=client",
+    "dev": "turbo dev --no-cache --continue",
+    "dev:api": "turbo dev --filter=api",
+    "dev:client": "turbo dev --filter=client",
+    "lint": "turbo lint",
+    "lint:api": "turbo lint --filter=api",
+    "lint:client": "turbo lint --filter=client",
+    "test": "turbo test",
+    "test:api": "turbo test --filter=api",
+    "test:client": "turbo test --filter=client",
+    "clean": "turbo clean",
+    "clean:api": "turbo clean --filter=api",
+    "clean:client": "turbo clean --filter=client",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "8.15.0",
+    "@typescript-eslint/parser": "8.15.0",
+    "eslint": "^9.15.0",
+    "prettier": "^3.3.3",
+    "turbo": "^2.3.3"
+  },
+  "packageManager": "npm@10.8.0",
+  "workspaces": [
+    "client",
+    "server",
+    "packages/*"
+  ]
+}
