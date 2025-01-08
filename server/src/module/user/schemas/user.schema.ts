@@ -1,16 +1,11 @@
 // user.schema.ts
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
-export interface UserDocument extends Document {
-  _id: Types.ObjectId;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
+export type UserDocument = HydratedDocument<User>;
+ 
 @Schema({ timestamps: true })
-export class User extends Document {
+export class User  {
   @Prop({ required: true })
   firstName: string;
 
@@ -20,9 +15,10 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop()
-  cognitoSub?: string; //for tracking Cognito user ID
+  @Prop({ required: true })
+  password: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
 UserSchema.index({ email: 1 });
+ 
