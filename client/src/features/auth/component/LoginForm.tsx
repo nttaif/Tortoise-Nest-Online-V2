@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
+import { Loader2 } from "lucide-react"
 
 interface LoginFormData {
   email: string
@@ -14,31 +15,37 @@ interface LoginFormData {
 }
 
 export function LoginForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>()
 
   const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true); 
     try {
       // Handle login logic here
       console.log('Form submitted:', data)
     } catch (error) {
       console.error('Login error:', error)
     }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); 
   }
+  
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
+    <div className="h-full flex items-center justify-center p-10 bg-gray-50 shadow-lg ">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Chào mừng quay trở lại với TNO</CardTitle>
           <CardDescription className="text-center">
-            Enter your email and password to login
+            Nhập mật khẩu và tài khoản để đăng nhâp
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Địa chỉ email</Label>
               <Input
                 id="email"
                 type="email"
@@ -57,7 +64,7 @@ export function LoginForm() {
               )}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Mật khẩu</Label>
               <div className="relative">
                 <Input
                   id="password"
@@ -86,19 +93,31 @@ export function LoginForm() {
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password.message}</p>
               )}
+              
             </div>
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className={`w-full flex h-14 justify-center items-center rounded-sm bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 ${
+           isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+            {isLoading ? (
+            <>
+              <Loader2 className="animate-spin mr-2" />
+              Please wait...
+            </>
+            ) : (
+            'Sign in'
+            )}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
-          <Button variant="link" className="text-sm">
+          <Button variant="link" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Forgot your password?
           </Button>
           <div className="text-sm text-center text-gray-600">
             Don&apos;t have an account?{' '}
-            <Button variant="link" className="p-0 text-primary">
+            <Button variant="link" className=" p-0 font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               Sign up
             </Button>
           </div>
