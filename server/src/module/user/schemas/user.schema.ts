@@ -23,8 +23,14 @@ export class User  {
 
   @Prop({ default: false })
   isClose:boolean
+
+  @Prop()
+  codeId: string;
+
+  @Prop()
+  codeExpired: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-UserSchema.index({ email: 1 });
+
  

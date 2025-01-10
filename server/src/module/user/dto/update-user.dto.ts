@@ -3,8 +3,8 @@ import { CreateUserDto } from './create-user.dto';
 import { IsString, IsNotEmpty ,IsOptional} from 'class-validator';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-    @IsOptional()
-    @IsString()
+     @IsOptional()
+     @IsString()
      @IsNotEmpty()
      firstName?: string;
 
@@ -18,5 +18,5 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
      @IsNotEmpty()
      password?: string;
 
-    
+
 }
