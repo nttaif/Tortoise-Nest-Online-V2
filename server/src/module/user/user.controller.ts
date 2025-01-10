@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse } from '@nestjs/swagger';
+import { ChangePasswordDto } from './dto/change.pasword.dto';
 
 @Controller('user')
 export class UserController {
@@ -31,6 +32,11 @@ export class UserController {
     return this.userService.update(id, updateUserDto);
   }
 
+  @Patch('change-password/:id')
+  updatePassword(@Param('id') id: string, @Body() changePass:ChangePasswordDto) {
+    return this.userService.updatePassword(id, changePass);
+  }
+  
   @Delete(':id')
   remove(@Param('id') userId:string) {
     return this.userService.remove(userId);
