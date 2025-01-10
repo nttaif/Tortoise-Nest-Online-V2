@@ -8,7 +8,7 @@ export class SignInDto {
   })
   @IsString()
   @MinLength(1)
-  username: string;
+  email: string;
 
   @ApiProperty({
     example: "Password123!",

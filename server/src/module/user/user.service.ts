@@ -26,7 +26,7 @@ export class UserService {
    * Step5: If error throw the error
    * @returns createUser
    */
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<{_id:Types.ObjectId}> {
 
     const emailExist = await this.checEmailExist(createUserDto.email);
     if (emailExist) {
@@ -35,13 +35,13 @@ export class UserService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hashSync(createUserDto.password, salt);
     try {
-      const createUser = new this.userModel({
+      const createUser = await this.userModel.create({
         firstName: createUserDto.firstName,
         password: hashedPassword,
         email: createUserDto.email,
         lastName: createUserDto.lastName,
       });
-      return createUser.save();
+      return {_id: createUser._id};
     } catch (error) {
       throw new Error(error);
     }
@@ -101,6 +101,6 @@ export class UserService {
    * Check email exist in the database
    * @returns ObjectID
   */
-  checEmailExist = async(email:string):Promise<{_id:Types.ObjectId}> => await this.userModel.exists({ email: email });
+  checEmailExist = async(email:string):Promise<{_id:Types.ObjectId}|null> => await this.userModel.exists({ email: email });
 
 }

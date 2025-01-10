@@ -24,8 +24,8 @@ export class CreateUserDto {
     password: string;
 
     @IsOptional()
-    codeId: string;
+    codeId?: string;
 
     @IsOptional()
-    codeExpired: Date;
+    codeExpired?: Date;
 }

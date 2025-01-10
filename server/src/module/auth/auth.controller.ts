@@ -15,6 +15,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -36,9 +37,25 @@ export class AuthController {
   })
   async signIn(@Body(ValidationPipe) signInDto: SignInDto) {
     const result = await this.authService.signIn(
-      signInDto.username,
+      signInDto.email,
       signInDto.password,
     );
+    return result;
+  }
+  @Post('signUp')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Sign up user' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'User successfully created',
+    schema: {
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  })
+  async signUp(@Body(ValidationPipe) signUpDto: SignUpDto) {
+    const result = await this.authService.signUp(signUpDto);
     return result;
   }
 }
