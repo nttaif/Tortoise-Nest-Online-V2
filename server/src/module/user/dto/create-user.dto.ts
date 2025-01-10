@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsNotEmpty, Min,Max, MinLength, MaxLength } from 'class-validator';
+import { IsString, IsEmail, IsNotEmpty, Min,Max, MinLength, MaxLength, IsOptional } from 'class-validator';
 import { UserDocument } from '../schemas/user.schema';
 export class CreateUserDto {
    
@@ -19,4 +19,11 @@ export class CreateUserDto {
     @MinLength(8)
     @MaxLength(50)
     password: string;
+
+    @IsOptional()
+    @MinLength(8)
+    @MaxLength(50)
+    rePassword: string;
+
+    
 }
