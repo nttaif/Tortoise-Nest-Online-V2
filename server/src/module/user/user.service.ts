@@ -89,7 +89,7 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with ${id} not found`);
     }
-    const isMatch = await checkPassword(changePass.curentPassword, user.password);
+    const isMatch = await checkPassword(changePass.currentPassword, user.password);
     if (isMatch) {
       throw new BadRequestException('Password current is invalid');
     }
