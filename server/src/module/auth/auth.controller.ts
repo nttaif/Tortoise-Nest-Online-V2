@@ -7,6 +7,7 @@ import {
   ValidationPipe,
   Get,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -16,6 +17,7 @@ import { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { LocalAuthGuard } from './passport/local-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -23,6 +25,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
+  @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Sign in user' })
   @ApiResponse({
@@ -35,13 +38,11 @@ export class AuthController {
       },
     },
   })
-  async signIn(@Body(ValidationPipe) signInDto: SignInDto) {
-    const result = await this.authService.signIn(
-      signInDto.email,
-      signInDto.password,
-    );
+  async signIn(@Request() req) {
+    const result = await this.authService.signIn(req.user);
     return result;
   }
+  
   @Post('signUp')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Sign up user' })
