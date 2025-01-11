@@ -15,7 +15,20 @@ import { ChangePasswordDto } from './dto/change.pasword.dto';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
-
+  /**
+   * Promise return User
+   * find user by id
+   */
+  async findUserByID(_id: string) {
+    return await this.userModel.findOne({_id});
+  }
+  /**
+   * Promise return User
+   * find user by email
+   */
+  async findUserByEmail(email:string){
+    return await this.userModel.findOne({email});
+  }
 
   /**
    * 

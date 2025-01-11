@@ -1,8 +1,8 @@
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 export const checkPassword = async (password: string, rePassword: string) => {
     try {
-        const isMatch = await bcrypt.compare(rePassword, password);
+        const isMatch = await bcrypt.compare(password,rePassword);
         if (!isMatch)
             return false;
         else {

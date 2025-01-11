@@ -3,9 +3,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
- 
+
 @Schema({ timestamps: true })
-export class User  {
+export class User {
+  _id: Types.ObjectId;
   @Prop({ required: true })
   firstName: string;
 
@@ -22,7 +23,7 @@ export class User  {
   isActive: boolean;
 
   @Prop({ default: false })
-  isClose:boolean
+  isClose: boolean;
 
   @Prop()
   codeId: string;
@@ -32,5 +33,3 @@ export class User  {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
-
- 
