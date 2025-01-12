@@ -1,45 +1,50 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 
-// // Giả sử bạn có API để gọi đăng nhập
-// const loginApi = async (email: string, password: string) => {
-//   // Đây chỉ là ví dụ, bạn cần gọi API thực tế ở đây.
-//   if (email === 'tai@123' && password === '123') {
-//     return { token: 'fake-jwt-token', user: { email, name: 'John Doe' } };
-//   }
-//   throw new Error('Invalid credentials');
-// };
+// Assume you have an API to call for login
+const loginApi = async (email: string, password: string) => {
+  // This is just an example, you need to call the actual API here.
+  const validEmail = process.env.REACT_APP_VALID_EMAIL;
+  const validPassword = process.env.REACT_APP_VALID_PASSWORD;
+  if (email === validEmail && password === validPassword) {
+    return { token: 'fake-jwt-token', user: { email, name: 'John Doe' } };
+  }
+  throw new Error('Invalid credentials');
+};
+interface User {
+  email: string;
+  name: string;
+}
 
-// export const useAuth = () => {
-//   const [user, setUser] = useState<any>(null); // Để lưu thông tin người dùng
-//   const [loading, setLoading] = useState<boolean>(false); // Để theo dõi trạng thái loading
-//   const [error, setError] = useState<string | null>(null); // Để lưu lỗi khi đăng nhập
+export const useAuth = () => {
+  const [user, setUser] = useState<User | null>(null); // Để lưu thông tin người dùng
+  const [loading, setLoading] = useState<boolean>(false); // Để theo dõi trạng thái loading
+  const [error, setError] = useState<string | null>(null); // Để lưu lỗi khi đăng nhập
 
-//   const login = async (email: string, password: string) => {
-//     setLoading(true);
-//     setError(null);
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    setError(null);
 
-//     try {
-//       const response = await loginApi(email, password);
-//       setUser(response.user); // Lưu thông tin người dùng
-//       localStorage.setItem('token', response.token); // Lưu token vào localStorage
-//     } catch (err: any) {
-//       setError(err.message); // Lưu lỗi nếu có
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+    try {
+      const response = await loginApi(email, password);
+      setUser(response.user); // Lưu thông tin người dùng
+      localStorage.setItem('token', response.token); // Lưu token vào localStorage
+    } catch (err: any) {
+      setError(err.message); // Lưu lỗi nếu có
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   const logout = () => {
-//     setUser(null); // Xóa thông tin người dùng
-//     localStorage.removeItem('token'); // Xóa token
-//   };
+  const logout = () => {
+    setUser(null); // Xóa thông tin người dùng
+    localStorage.removeItem('token'); // Xóa token
+  };
 
-//   return {
-//     user,
-//     loading,
-//     error,
-//     login,
-//     logout
-//   };
-// };
-// Ở đây, chúng ta đã tạo một hook useAuth để quản lý trạng thái đăng nhập và đăng xuất. Hook này sẽ trả về các giá trị user, loading, error, login và logout.
+  return {
+    user,
+    loading,
+    error,
+    login,
+    logout,
+  };
+};
