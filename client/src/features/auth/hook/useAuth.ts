@@ -28,8 +28,12 @@ export const useAuth = () => {
       const response = await loginApi(email, password);
       setUser(response.user); // Lưu thông tin người dùng
       localStorage.setItem('token', response.token); // Lưu token vào localStorage
-    } catch (err: any) {
-      setError(err.message); // Lưu lỗi nếu có
+    } catch (err : unknown) {
+      if (err instanceof Error) {
+        setError(err.message); // Lưu lỗi nếu có
+      } else {
+        setError('An unknown error occurred'); // Xử lý lỗi không xác định
+      }
     } finally {
       setLoading(false);
     }
