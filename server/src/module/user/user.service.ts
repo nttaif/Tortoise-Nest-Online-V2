@@ -82,12 +82,13 @@ export class UserService {
 
 
   /**
-   * Promise return User
-   * Step1: Validate the id
-   * Step2: Find user by id and update the user
-   * Step3: if user not found throw NotFoundException
-   * Step4: If user found return the updated user
-  */
+   * @param id 
+   * @param updateUserDto 
+   * Step 1 : Validate ObjectID
+   * Step 2 : Update user follow id 
+   * Step 3 : Return User
+   * @returns updateUser
+   */
   async update(id: string, updateUserDto: UpdateUserDto) {
     validateID(id);
     const updateUser = await this.userModel
@@ -96,6 +97,21 @@ export class UserService {
     return updateUser;
   }
 
+
+
+  /**
+   * 
+   * @param id 
+   * @param changePass 
+   * Step 1 : Validate OjectID
+   * Step 2 : Find ID of user, If not found return NotFoundException
+   * Step 3 : Check password of user in the database with input current password
+   * Step 4 : if dont match throw new BadRequestException
+   * Step 5 : Check current password and new password, if both match throw BadRequestException
+   * Step 6 : Continute check new password and reNewpassword, if the both are different throw BadRequestException
+   * Step 7 : if all is true, hash the newPassowrd after update user with new password
+   * @returns updateUser
+   */
   async updatePassword(id: string, changePass: ChangePasswordDto): Promise<UpdateWriteOpResult> {
     validateID(id);
     const user = await this.userModel.findById(id).exec();
@@ -103,14 +119,17 @@ export class UserService {
       throw new NotFoundException(`User with ${id} not found`);
     }
     const isMatch = await checkPassword(changePass.currentPassword, user.password);
-    if (isMatch) {
+    if (!isMatch) {
       throw new BadRequestException('Password current is invalid');
+    }
+    if(changePass.currentPassword === changePass.newPassword){
+      throw new BadRequestException("The new password must be different from the old password")
     }
     if (changePass.newPassword !== changePass.reNewpassword) {
       throw new BadRequestException('New password does not match');
     } else {
       const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hashSync(changePass.newPassword, salt);
+      const hashedPassword = await bcrypt.hash(changePass.newPassword, salt);
       const updateUser = await this.userModel.updateOne({ _id: id }, { password: hashedPassword }, { new: true }).exec();
       return updateUser;
     }
@@ -118,7 +137,15 @@ export class UserService {
 
 
 
-
+/**
+ * 
+ * @param id
+ * Promise return User 
+ * Step 1 : Validate id is ObjectID
+ * Step 2 : Find user by id in database
+ * Step 3 : If not found user throw NotFoundException
+ * @returns findandUpdate
+ */
   async remove(id: string): Promise<User> {
     validateID(id);
     const findandUpdate = await this.userModel
@@ -135,6 +162,6 @@ export class UserService {
    * Check email exist in the database
    * @returns ObjectID
   */
-  checEmailExist = async (email: string): Promise<{ _id: Types.ObjectId } | null> => await this.userModel.exists({ email: email });
-
+  checEmailExist = async (email: string): Promise<{ _id: Types.ObjectId } | null> =>
+     await this.userModel.exists({ email: email });
 }
