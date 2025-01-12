@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../hook/useAuth';
+import { useAuth } from '@/features/auth/hook/useAuth';
 const LoginPage = () => {
   const { login, user, loading, error } = useAuth();
   const [email, setEmail] = useState<string>('');
