@@ -20,6 +20,14 @@ export class SignUpDto {
     example: 'johndoe',
     description: 'Username',
   })
+
+  @IsString()
+  address: string;
+  @ApiProperty({
+    example: 'HCM',
+    description: 'Address',
+  })
+
   @IsString()
   @MinLength(1)
   @IsEmail()

@@ -13,9 +13,9 @@ export class ResponseUser {
 @IsEmail()
   email: string;
 @IsString()
-  createdAt: string;
+  createdAt: Date;
 @IsString()
-  updatedAt: string;
+  updatedAt: Date;
   @IsString()
   __v: number
 }
