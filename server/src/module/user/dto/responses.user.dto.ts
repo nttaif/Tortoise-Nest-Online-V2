@@ -1,6 +1,9 @@
 import { IsString, IsBoolean, IsEmail } from 'class-validator';
+import { Date, ObjectId, Types } from 'mongoose';
 
-export class Response {
+export class ResponseUser {
+@IsString()
+  _id: Types.ObjectId;
 @IsString()
   fistName: string;
 @IsString()
@@ -9,4 +12,10 @@ export class Response {
   isActive: boolean;
 @IsEmail()
   email: string;
+@IsString()
+  createdAt: string;
+@IsString()
+  updatedAt: string;
+  @IsString()
+  __v: number
 }

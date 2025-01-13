@@ -18,6 +18,8 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LocalAuthGuard } from './passport/local-auth.guard';
+import { use } from 'passport';
+import { JwtAuthGuard } from './passport/jwt-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -58,5 +60,33 @@ export class AuthController {
   async signUp(@Body(ValidationPipe) signUpDto: SignUpDto) {
     const result = await this.authService.signUp(signUpDto);
     return result;
+  }
+
+  
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Current user profile',
+  })
+  getCurrentUser(@CurrentUser() user: any) {
+    const result = this.authService.getCurrentUser(user);
+    return result;
+  }
+
+
+  /**
+   * Refreshes the access token using a valid refresh token
+   * @param refreshTokenDto - DTO containing the refresh token
+   * @returns New authentication tokens
+   */
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refreshToken(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refreshToken(
+      refreshTokenDto.refreshToken,
+      refreshTokenDto.username,
+    );
   }
 }

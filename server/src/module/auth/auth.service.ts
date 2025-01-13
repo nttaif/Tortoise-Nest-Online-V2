@@ -7,13 +7,14 @@ import { UserService } from '../user/user.service';
 import { User } from '../user/schemas/user.schema';
 import { checkPassword } from 'src/util/compare.password';
 import { JwtService } from '@nestjs/jwt';
+import { ResponseUser } from '../user/dto/responses.user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService<AllConfigType>,
     private readonly userService: UserService,
-    private readonly jwtService:JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   /**
@@ -23,29 +24,18 @@ export class AuthService {
    * if username and password valid call signIn method from user service
    */
   async signIn(user: User): Promise<{
-    user: {
-      email: string,
-      _id: string,
-      firstName: string,
-      lastName: string,
-    };
     access_token: string;
   }> {
     try {
       const payload = { email: user.email, sub: user._id.toString() };
       return {
-        user: {
-          email: user.email,
-          _id: user._id.toString(),
-          firstName: user.firstName,
-          lastName: user.lastName,
-        },
         access_token: this.jwtService.sign(payload),
       };
     } catch (error) {
       throw new UnauthorizedException(`Login failed: ${error.message}`);
     }
   }
+
   async validateUser(username: string, pass: string): Promise<User | null> {
     const user = await this.userService.findUserByEmail(username);
     if (!user) {
@@ -85,5 +75,40 @@ export class AuthService {
     }
   }
 
-  
+  async getCurrentUser(userInfo: {
+    _id: string;
+    email: string;
+  }): Promise<ResponseUser|null|undefined> {
+    try {
+      const user = await this.userService.findUserByID(userInfo._id);
+      const responseUser = new ResponseUser();
+      if (user !== null) {
+        return {
+          _id: user._id,
+          email: user.email,
+          fistName: user.firstName,
+          lastName: user.lastName,
+          isActive: user.isActive,
+          createdAt: (user as any).createdAt,
+          updatedAt: (user as any).updatedAt,
+          __v: user.__v,
+        } as ResponseUser;
+      }
+    } catch (error) {
+      throw new UnauthorizedException(
+        `Get current user failed: ${error.message}`,
+      );
+    }
+  }
+
+  async refreshToken(
+    refreshToken: string,
+    username: string,
+  ): Promise<{ access_token: string }> {
+    try {
+      return { access_token: 'new access token' };
+    } catch (error) {
+      throw new UnauthorizedException(`Refresh token failed: ${error.message}`);
+    }
+  }
 }
