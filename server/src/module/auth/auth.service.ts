@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from 'src/config/config.type';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -8,6 +12,9 @@ import { User } from '../user/schemas/user.schema';
 import { checkPassword } from 'src/util/compare.password';
 import { JwtService } from '@nestjs/jwt';
 import { ResponseUser } from '../user/dto/responses.user.dto';
+import { CodeAuthDto } from './dto/codeAuth.dto';
+import dayjs from 'dayjs';
+import { UpdateUserDto } from '../user/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -74,11 +81,15 @@ export class AuthService {
       throw new UnauthorizedException(`Register failed: ${error.message}`);
     }
   }
-
+  /**
+   * @param userInfo: email, _id
+   * if user not found throw UnauthorizedException
+   * @returns responseUser
+   */
   async getCurrentUser(userInfo: {
     _id: string;
     email: string;
-  }): Promise<ResponseUser|null|undefined> {
+  }): Promise<ResponseUser | undefined> {
     try {
       const user = await this.userService.findUserByID(userInfo._id);
       const responseUser = new ResponseUser();
@@ -99,6 +110,37 @@ export class AuthService {
         `Get current user failed: ${error.message}`,
       );
     }
+  }
+
+  /**
+   *
+   * @param verifyInfo
+   * call method findUserByEmail from user service
+   * if user not found throw BadRequestException
+   * check expired of code
+   * @returns checkIsBefore: boolean
+   */
+  async handleActivityAccount(
+    verifyInfo: CodeAuthDto,
+  ): Promise<{ message: string }> {
+    const user = await this.userService.findUserByID(verifyInfo._id);
+    if (!user) {
+      throw new BadRequestException('Mã code không hợp lệ hoặc đã hết hạn');
+    }
+    //check expired
+    const checkIsBefore = dayjs().isBefore(user.codeExpired);
+    if (checkIsBefore) {
+      if (user.codeId === verifyInfo.verificationCode) {
+        const updateUserDto = new UpdateUserDto();
+        updateUserDto.isActive = true;
+        await this.userService.update(verifyInfo._id, updateUserDto);
+      }else{
+        throw new BadRequestException('Mã code của bạn không đúng');
+      }
+    } else {
+      throw new BadRequestException('Mã code của bạn đã hết hạn');
+    }
+    return { message:"Verification Successfully" };
   }
 
   async refreshToken(

@@ -13,4 +13,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
      @IsNotEmpty()
      lastName?: string;
 
+     @IsOptional()
+     isActive?: boolean;
+
 }

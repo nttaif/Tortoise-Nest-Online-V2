@@ -20,6 +20,7 @@ import { SignUpDto } from './dto/sign-up.dto';
 import { LocalAuthGuard } from './passport/local-auth.guard';
 import { use } from 'passport';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
+import { CodeAuthDto } from './dto/codeAuth.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -89,4 +90,16 @@ export class AuthController {
       refreshTokenDto.username,
     );
   }
+
+  @Post('verify')
+  verify(@Body() codeAuthDto:CodeAuthDto) {
+    return this.authService.handleActivityAccount(codeAuthDto);
+  }
+
+  // @Post('re-verify')
+  // reVerify(@Body("email") email:string) {
+  //   return this.authService.reVerify(email);
+  // }
+
+
 }
