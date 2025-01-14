@@ -74,6 +74,7 @@ export class AuthService {
         password: signUpDto.password,
         firstName: signUpDto.firstName,
         lastName: signUpDto.lastName,
+        address: signUpDto.address
       };
       const result = await this.userService.create(createUserDto);
       return { message: `Create account successfully with id:  ${result._id}` };
@@ -97,7 +98,7 @@ export class AuthService {
         return {
           _id: user._id,
           email: user.email,
-          fistName: user.firstName,
+          firstName: user.firstName,
           lastName: user.lastName,
           isActive: user.isActive,
           createdAt: (user as any).createdAt,

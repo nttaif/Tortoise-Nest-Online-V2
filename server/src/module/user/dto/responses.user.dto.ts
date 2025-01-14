@@ -1,21 +1,34 @@
 import { IsString, IsBoolean, IsEmail } from 'class-validator';
 import { Date, ObjectId, Types } from 'mongoose';
+import {Expose}  from 'class-transformer';
 
 export class ResponseUser {
 @IsString()
   _id: Types.ObjectId;
+
 @IsString()
-  fistName: string;
+@Expose()
+  firstName: string;
+
 @IsString()
+@Expose()
   lastName: string;
+
 @IsBoolean()
+@Expose()
   isActive: boolean;
+
 @IsEmail()
+@Expose()
   email: string;
+
 @IsString()
-  createdAt: string;
+@Expose()
+  createdAt: Date;
+  
 @IsString()
-  updatedAt: string;
+@Expose()
+  updatedAt: Date;
   @IsString()
   __v: number
 }

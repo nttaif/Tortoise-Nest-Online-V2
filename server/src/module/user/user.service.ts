@@ -11,7 +11,9 @@ import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { checkPassword } from 'src/util/compare.password';
 import { ChangePasswordDto } from './dto/change.pasword.dto';
-
+import { ResponseUser } from './dto/responses.user.dto';
+import { response } from 'express';
+import { plainToInstance } from 'class-transformer';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
@@ -48,14 +50,15 @@ export class UserService {
     }
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hashSync(createUserDto.password, salt);
-    const code = uuidv4().replace(/\D/g, '').slice(0, 8);
+  
     try {
       const createUser = await this.userModel.create({
         firstName: createUserDto.firstName,
         password: hashedPassword,
         email: createUserDto.email,
         lastName: createUserDto.lastName,
-        codeId: code,
+        address:createUserDto.address,
+        codeId:  uuidv4().replace(/\D/g, '').slice(0, 8),
         codeExpired: dayjs().add(5, 'minutes'),
       });
       return { _id: createUser._id };
@@ -66,10 +69,38 @@ export class UserService {
 
 
 
-  ////////////
-  findAll(): Promise<User[]> {
-    const users = this.userModel.find().exec();
-    return users;
+ /**
+  * Find all users with pagination.
+  * 
+  * @param page - The page number to retrieve.
+  * @param limitPage - The number of users per page.
+  * Promise User[] or undefined total and totalPage
+  * Step 1: validate page<=0 and limitPage<=0
+  * Step 2: skip Calculate the number of documents to skip based on the current number of pages and the number of documents per page.
+  * Step 3: Find all User with Pagination and select filed core
+  * Step 4: countDocuments is total user 
+  * Step 5: Math ceil totalPage
+  * Step 6: return users and total and totalPage
+  * @returns User[] , total , totalPage
+  */
+ async findAll(page: number, limitPage: number): Promise<{ users: ResponseUser[]|undefined; total: number ; totalPage:number}> {
+  if(page<=0||limitPage<=0){
+    page=1
+    limitPage=1
+  }
+   const skip = (page-1) * limitPage;
+   const [users, total] = await Promise.all([
+     this.userModel.find().skip(skip).limit(limitPage).exec(),
+     this.userModel.countDocuments().exec()
+   ]);
+   const userDto = plainToInstance(ResponseUser, users, {excludeExtraneousValues:true});
+   let totalPage : number;
+   totalPage = Math.ceil(total/limitPage) ;
+   return {
+     users:userDto,
+     total,
+     totalPage
+   };
   }
 
 
