@@ -1,22 +1,21 @@
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Types, UpdateWriteOpResult } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
-import { NotFoundException, BadRequestException, Type } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { validateID } from 'src/util/validate.id';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { checkPassword } from 'src/util/compare.password';
 import { ChangePasswordDto } from './dto/change.pasword.dto';
 import { ResponseUser } from './dto/responses.user.dto';
-import { response } from 'express';
 import { plainToInstance } from 'class-transformer';
+
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) { }
-
   /**
    * Promise return User
    * find user by id
@@ -32,7 +31,7 @@ export class UserService {
     return await this.userModel.findOne({email});
   }
 
-  /**
+  /** Create new user
    * 
    * @param createUserDto 
    * Promise return User 
@@ -50,7 +49,7 @@ export class UserService {
     }
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hashSync(createUserDto.password, salt);
-  
+    
     try {
       const createUser = await this.userModel.create({
         firstName: createUserDto.firstName,
@@ -77,23 +76,24 @@ export class UserService {
   * Promise User[] or undefined total and totalPage
   * Step 1: validate page<=0 and limitPage<=0
   * Step 2: skip Calculate the number of documents to skip based on the current number of pages and the number of documents per page.
-  * Step 3: Find all User with Pagination and select filed core
-  * Step 4: countDocuments is total user 
-  * Step 5: Math ceil totalPage
-  * Step 6: return users and total and totalPage
+  * Step 3: Find all User with Pagination 
+  * Step 4: select necessary filed 
+  * Step 5: countDocuments is count total user 
+  * Step 6: Math ceil totalPage
+  * Step 7: return users and total and totalPage
   * @returns User[] , total , totalPage
   */
  async findAll(page: number, limitPage: number): Promise<{ users: ResponseUser[]|undefined; total: number ; totalPage:number}> {
-  if(page<=0||limitPage<=0){
-    page=1
-    limitPage=1
-  }
+        if(page<=0||limitPage<=0){
+          page=1
+          limitPage=1
+        }
    const skip = (page-1) * limitPage;
    const [users, total] = await Promise.all([
      this.userModel.find().skip(skip).limit(limitPage).exec(),
      this.userModel.countDocuments().exec()
    ]);
-   const userDto = plainToInstance(ResponseUser, users, {excludeExtraneousValues:true});
+   const userDto = plainToInstance(ResponseUser, users, {excludeExtraneousValues:false});
    let totalPage : number;
    totalPage = Math.ceil(total/limitPage) ;
    return {
@@ -117,15 +117,15 @@ export class UserService {
    * @param updateUserDto 
    * Step 1 : Validate ObjectID
    * Step 2 : Update user follow id 
-   * Step 3 : Return User
-   * @returns updateUser
+   * Step 3 : Return message
+   * @returns message
    */
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    validateID(id);
-    const updateUser = await this.userModel
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<{message}> {
+       validateID(id);
+       await this.userModel
       .updateOne({ _id: id }, updateUserDto, { new: true })
       .exec();
-    return updateUser;
+    return { message: `User updated successfully` };
   }
 
 
@@ -143,7 +143,7 @@ export class UserService {
    * Step 7 : if all is true, hash the newPassowrd after update user with new password
    * @returns updateUser
    */
-  async updatePassword(id: string, changePass: ChangePasswordDto): Promise<UpdateWriteOpResult> {
+  async updatePassword(id: string, changePass: ChangePasswordDto): Promise<{message}> {
     validateID(id);
     const user = await this.userModel.findById(id).exec();
     if (!user) {
@@ -159,10 +159,10 @@ export class UserService {
     if (changePass.newPassword !== changePass.reNewpassword) {
       throw new BadRequestException('New password does not match');
     } else {
-      const salt = await bcrypt.genSalt();
+      const salt           = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(changePass.newPassword, salt);
-      const updateUser = await this.userModel.updateOne({ _id: id }, { password: hashedPassword }, { new: true }).exec();
-      return updateUser;
+                             await this.userModel.updateOne({ _id: id }, { password: hashedPassword }, { new: true }).exec();
+      return {message:`Password updated successfully`};
     }
   }
 
