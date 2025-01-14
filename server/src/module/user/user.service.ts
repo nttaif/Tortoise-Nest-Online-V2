@@ -1,4 +1,4 @@
-
+                                                                        
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
@@ -8,7 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { validateID } from 'src/util/validate.id';
 import dayjs from 'dayjs';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';     
 import { checkPassword } from 'src/util/compare.password';
 import { ChangePasswordDto } from './dto/change.pasword.dto';
 import { ResponseUser } from './dto/responses.user.dto';
@@ -93,7 +93,7 @@ export class UserService {
      this.userModel.find().skip(skip).limit(limitPage).exec(),
      this.userModel.countDocuments().exec()
    ]);
-   const userDto = plainToInstance(ResponseUser, users, {excludeExtraneousValues:false});
+   const userDto = plainToInstance(ResponseUser, users, {excludeExtraneousValues:true});
    let totalPage : number;
    totalPage = Math.ceil(total/limitPage) ;
    return {
