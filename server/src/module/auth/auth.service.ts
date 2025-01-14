@@ -87,7 +87,7 @@ export class AuthService {
         return {
           _id: user._id,
           email: user.email,
-          fistName: user.firstName,
+          firstName: user.firstName,
           lastName: user.lastName,
           isActive: user.isActive,
           createdAt: (user as any).createdAt,

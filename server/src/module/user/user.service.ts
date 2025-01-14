@@ -13,6 +13,7 @@ import { checkPassword } from 'src/util/compare.password';
 import { ChangePasswordDto } from './dto/change.pasword.dto';
 import { ResponseUser } from './dto/responses.user.dto';
 import { response } from 'express';
+import { plainToInstance } from 'class-transformer';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) { }
 
@@ -82,20 +83,21 @@ export class UserService {
   * Step 6: return users and total and totalPage
   * @returns User[] , total , totalPage
   */
- async findAll(page: number, limitPage: number): Promise<{ users: User[]|undefined; total: number ; totalPage:number}> {
+ async findAll(page: number, limitPage: number): Promise<{ users: ResponseUser[]|undefined; total: number ; totalPage:number}> {
   if(page<=0||limitPage<=0){
     page=1
     limitPage=1
   }
    const skip = (page-1) * limitPage;
    const [users, total] = await Promise.all([
-     this.userModel.find().select('firstName lastName email isActive createdAt updatedAt __v').skip(skip).limit(limitPage).exec(),
+     this.userModel.find().skip(skip).limit(limitPage).exec(),
      this.userModel.countDocuments().exec()
    ]);
+   const userDto = plainToInstance(ResponseUser, users, {excludeExtraneousValues:true});
    let totalPage : number;
    totalPage = Math.ceil(total/limitPage) ;
    return {
-     users,
+     users:userDto,
      total,
      totalPage
    };
