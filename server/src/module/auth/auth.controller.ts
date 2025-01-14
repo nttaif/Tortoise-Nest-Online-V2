@@ -21,6 +21,7 @@ import { LocalAuthGuard } from './passport/local-auth.guard';
 import { use } from 'passport';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
 import { CodeAuthDto } from './dto/codeAuth.dto';
+import { ResetPasswordDto } from './dto/reset.password.dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -76,6 +77,29 @@ export class AuthController {
     return result;
   }
 
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Forgot password' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Forgot password',
+  })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    const result = await this.authService.forgotPassword(forgotPasswordDto);
+    return result;
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Forgot password' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Forgot password',
+  })
+  async resetPassword(@Body() resetPassword: ResetPasswordDto) {
+    const result = await this.authService.resetPassword(resetPassword);
+    return result;
+  }
 
   /**
    * Refreshes the access token using a valid refresh token
@@ -96,10 +120,10 @@ export class AuthController {
     return this.authService.handleActivityAccount(codeAuthDto);
   }
 
-  // @Post('re-verify')
-  // reVerify(@Body("email") email:string) {
-  //   return this.authService.reVerify(email);
-  // }
+  @Post('re-verify')
+  reVerify(@Body("email") email:string) {
+    return this.authService.reVerify(email);
+  }
 
 
 }

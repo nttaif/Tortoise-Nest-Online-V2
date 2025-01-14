@@ -3,6 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from 'src/config/config.type';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -16,7 +17,9 @@ import { CodeAuthDto } from './dto/codeAuth.dto';
 import dayjs from 'dayjs';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-
+import { v4 as uuidv4 } from 'uuid';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset.password.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -74,7 +77,7 @@ export class AuthService {
           `Password and Confirm Password not match`,
         );
       }
-      //Biểu thức chính quy để kiểm tra mật khẩu
+      //check password is strong enough
       const passwordRegex =
         /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/;
       if (!passwordRegex.test(signUpDto.password)) {
@@ -148,6 +151,7 @@ export class AuthService {
    * if code is correct and not expired update isActive of user to true
    * if code is incorrect throw BadRequestException
    * if code is expired throw BadRequestException
+   * remove OTP code used
    * @returns message
    */
   async handleActivityAccount(
@@ -155,14 +159,18 @@ export class AuthService {
   ): Promise<{ message: string }> {
     const user = await this.userService.findUserByID(verifyInfo._id);
     if (!user) {
-      throw new BadRequestException('Invalid or expired code');
+      throw new BadRequestException('Invalid user');
     }
     //check expired
+    if (!user.codeExpired) {
+      throw new BadRequestException('Code expiration date is not set');
+    }
     const checkIsBefore = dayjs().isBefore(user.codeExpired);
     if (checkIsBefore) {
       if (user.codeId === verifyInfo.verificationCode) {
         const updateUserDto = new UpdateUserDto();
         updateUserDto.isActive = true;
+        updateUserDto.codeId = '';
         await this.userService.update(verifyInfo._id, updateUserDto);
       } else {
         throw new BadRequestException('Your code is incorrect');
@@ -172,6 +180,105 @@ export class AuthService {
     }
     return { message: 'Verification Successfully' };
   }
+
+
+  /**
+   * 
+   * @param email
+   * call method findUserByEmail from user service
+   * if user not found throw BadRequestException
+   * update codeId and codeExpired of user
+   * call method update from user service
+   * if update failed throw BadRequestException
+   * send mail
+   * @returns message
+   */
+  async reVerify(email: string): Promise<{ message: string }> {
+    const user = await this.userService.findUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Invalid email');
+    }
+    user.codeId = uuidv4().replace(/\D/g, '').slice(0, 8),
+    user.codeExpired = dayjs().add(5, 'minutes').toDate();
+    const updateUser = await this.userService.update(user._id.toString(), user);
+    if(!updateUser){
+      throw new BadRequestException('Update code failed');
+    }
+    //send mail
+    this.mailerService
+      .sendMail({
+        to: user.email,
+        subject: 'Kích hoạt tài khoản tại Tortoise Nest Online',
+        template: 'register',
+        context: {
+          name: user.lastName ?? user.email,
+          activationCode: user.codeId,
+        },
+      })
+      .catch(() => {});
+    return { message: 'Resend verification code successfully' };
+  }
+
+  /**
+   * 
+   * @param forgotPasswordDto 
+   * call method reVerify
+   * if reVerify failed throw BadRequestException
+   * @returns message
+   */
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto): Promise<{ message: string }> {
+    const reVerify = await this.reVerify(forgotPasswordDto.email);
+    if(!reVerify){
+      throw new BadRequestException('Resend code failed');
+    }
+    return { message: 'A code OTP will be sent to email in a few minutes, Please check your email!' };
+  }
+
+  /**
+   * 
+   * @param resetPassword 
+   * check if the new password is strong enough
+   * call method findUserByEmail from user service
+   * if user not found throw BadRequestException
+   * check expired
+   * if code is correct update password of user
+   * if code is incorrect throw BadRequestException
+   * if code is expired throw BadRequestException
+   * remove OTP code used
+   * @returns message
+   */
+  async resetPassword(resetPassword: ResetPasswordDto): Promise<{ message: string }> {
+    // Check if the new password is strong enough
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/;
+    if (!passwordRegex.test(resetPassword.newPassword)) {
+      throw new BadRequestException('Password is not strong enough, please try again.');
+    }
+    const user = await this.userService.findUserByEmail(resetPassword.email);
+    if (!user) {
+      throw new BadRequestException('Invalid user');
+    }
+    //check expired
+    const checkIsBefore = dayjs().isBefore(user.codeExpired);
+    if (checkIsBefore) {
+      if (user.codeId === resetPassword.codeId) {
+        const updateUserDto = new UpdateUserDto();
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(resetPassword.newPassword, salt);
+        updateUserDto.password = hashedPassword;
+        updateUserDto.codeId = '';
+        updateUserDto.codeExpired = undefined;
+        await this.userService.update(user._id.toString(), updateUserDto);
+      } else {
+        throw new BadRequestException('Your code is incorrect');
+      }
+    } else {
+      throw new BadRequestException('Your code has expired');
+    }
+    return { message: 'Reset password successfully' };
+  }
+
+
+
 
   async refreshToken(
     refreshToken: string,
