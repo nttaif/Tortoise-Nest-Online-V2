@@ -15,6 +15,7 @@ import { ResponseUser } from '../user/dto/responses.user.dto';
 import { CodeAuthDto } from './dto/codeAuth.dto';
 import dayjs from 'dayjs';
 import { UpdateUserDto } from '../user/dto/update-user.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
     private readonly configService: ConfigService<AllConfigType>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   /**
@@ -57,8 +59,11 @@ export class AuthService {
    * Sign up user
    * @param signUpDto
    * if password and rePassword not match throw UnauthorizedException
+   *  if password is not strong enough throw BadRequestException
    * create createUserDto object from signUpDto
    * call createUser method from user service
+   * call sendMail method from mail service
+   * if sendMail method throw error throw UnauthorizedException
    * if createUser method throw error throw UnauthorizedException
    * @returns
    */
@@ -69,14 +74,33 @@ export class AuthService {
           `Password and Confirm Password not match`,
         );
       }
+      //Biểu thức chính quy để kiểm tra mật khẩu
+      const passwordRegex =
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/;
+      if (!passwordRegex.test(signUpDto.password)) {
+        throw new BadRequestException(
+          'Password is not strong enough, please try again.',
+        );
+      }
       const createUserDto: CreateUserDto = {
         email: signUpDto.email,
         password: signUpDto.password,
         firstName: signUpDto.firstName,
         lastName: signUpDto.lastName,
-        address: signUpDto.address
       };
       const result = await this.userService.create(createUserDto);
+      //send mail
+      this.mailerService
+        .sendMail({
+          to: result.email,
+          subject: 'Kích hoạt tài khoản tại Tortoise Nest Online',
+          template: 'register',
+          context: {
+            name: result.lastName ?? result.email,
+            activationCode: result.code_id,
+          },
+        })
+        .catch(() => {});
       return { message: `Create account successfully with id:  ${result._id}` };
     } catch (error) {
       throw new UnauthorizedException(`Register failed: ${error.message}`);
@@ -85,6 +109,8 @@ export class AuthService {
   /**
    * @param userInfo: email, _id
    * if user not found throw UnauthorizedException
+   * create responseUser object from user
+   * if user is null return undefined
    * @returns responseUser
    */
   async getCurrentUser(userInfo: {
@@ -119,14 +145,17 @@ export class AuthService {
    * call method findUserByEmail from user service
    * if user not found throw BadRequestException
    * check expired of code
-   * @returns checkIsBefore: boolean
+   * if code is correct and not expired update isActive of user to true
+   * if code is incorrect throw BadRequestException
+   * if code is expired throw BadRequestException
+   * @returns message
    */
   async handleActivityAccount(
     verifyInfo: CodeAuthDto,
   ): Promise<{ message: string }> {
     const user = await this.userService.findUserByID(verifyInfo._id);
     if (!user) {
-      throw new BadRequestException('Mã code không hợp lệ hoặc đã hết hạn');
+      throw new BadRequestException('Invalid or expired code');
     }
     //check expired
     const checkIsBefore = dayjs().isBefore(user.codeExpired);
@@ -135,13 +164,13 @@ export class AuthService {
         const updateUserDto = new UpdateUserDto();
         updateUserDto.isActive = true;
         await this.userService.update(verifyInfo._id, updateUserDto);
-      }else{
-        throw new BadRequestException('Mã code của bạn không đúng');
+      } else {
+        throw new BadRequestException('Your code is incorrect');
       }
     } else {
-      throw new BadRequestException('Mã code của bạn đã hết hạn');
+      throw new BadRequestException('Your code has expired');
     }
-    return { message:"Verification Successfully" };
+    return { message: 'Verification Successfully' };
   }
 
   async refreshToken(

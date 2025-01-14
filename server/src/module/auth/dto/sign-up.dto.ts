@@ -22,13 +22,6 @@ export class SignUpDto {
   })
 
   @IsString()
-  address: string;
-  @ApiProperty({
-    example: 'HCM',
-    description: 'Address',
-  })
-
-  @IsString()
   @MinLength(1)
   @IsEmail()
   email: string;
