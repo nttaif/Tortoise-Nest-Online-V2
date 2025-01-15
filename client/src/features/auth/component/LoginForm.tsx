@@ -1,13 +1,12 @@
-'use client'
-
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { Loader2 } from "lucide-react"
+import InputLogin from './InputLogin';
+
 
 interface LoginFormData {
   email: string
@@ -31,8 +30,6 @@ export function LoginForm() {
       setIsLoading(false);
     }, 1000); 
   }
-  
-
   return (
     <div className="h-full flex items-center justify-center p-10 bg-gray-50 shadow-lg ">
       <Card className="w-full max-w-md shadow-lg">
@@ -46,7 +43,7 @@ export function LoginForm() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Địa chỉ email</Label>
-              <Input
+              <InputLogin
                 id="email"
                 type="email"
                 placeholder="m@example.com"
@@ -66,7 +63,7 @@ export function LoginForm() {
             <div className="space-y-2">
               <Label htmlFor="password">Mật khẩu</Label>
               <div className="relative">
-                <Input
+                <InputLogin
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   {...register('password', {
@@ -93,7 +90,6 @@ export function LoginForm() {
               {errors.password && (
                 <p className="text-sm text-red-500">{errors.password.message}</p>
               )}
-              
             </div>
             <Button
               type="submit"
