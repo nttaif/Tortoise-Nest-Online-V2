@@ -18,29 +18,20 @@ import {
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { NavMain } from "./nav.main.component";
 import UserMenu from "./user.menu.component";
+import SidebarHeaderComponent from "./sidebar.header.component";
 
 // Menu items configuration
 const data = {
   user: {
-    name: "shadcn",
+    name: "dev",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   orgs: [
     {
-      name: "Wonder CRM",
+      name: "TNO ADMIN",
       logo: HouseIcon,
       plan: "Enterprise",
-    },
-    {
-      name: "One Amo",
-      logo: AudioWaveform,
-      plan: "Free",
-    },
-    {
-      name: "Another Org",
-      logo: Command,
-      plan: "Free",
     },
   ],
   navMain: [
@@ -54,58 +45,54 @@ const data = {
           title: "Dashboard",
           url: "/dashboard",
         },
+        {
+          title: "Finance",
+          url: "/finance",
+        },
       ],
     },
     {
-      title: "Tickets",
-      url: "/tickets",
+      title: "Students",
+      url: "/students",
       icon: Ticket,
       items: [
         {
-          title: "All Tickets",
-          url: "/tickets",
+          title: "All Student",
+          url: "/students",
         },
         {
-          title: "Activities",
-          url: "/tickets/activities",
-        },
-        {
-          title: "Ticket Settings",
-          url: "/tickets/settings",
+          title: "Add New Student",
+          url: "/students/add",
         },
       ],
     },
     {
-      title: "Organizations",
-      url: "/organizations",
+      title: "Teachers",
+      url: "/teachers",
       icon: Building2,
       items: [
         {
-          title: "All Organizations",
-          url: "/organizations",
+          title: "All Teachers",
+          url: "/teachers",
         },
         {
-          title: "Teams",
-          url: "/organizations/teams",
-        },
-        {
-          title: "Users",
-          url: "/organizations/users",
+          title: "Add New Teacher",
+          url: "teachers/add",
         },
       ],
     },
     {
-      title: "User Management",
-      url: "/customers",
+      title: "App",
+      url: "/profile",
       icon: Users,
       items: [
         {
-          title: "All Users",
-          url: "/users",
+          title: "Profile",
+          url: "/profile",
         },
         {
-          title: "MORE",
-          url: "/",
+          title: "Edit Profile",
+          url: "/profile/edit",
         },
       ],
     },
@@ -124,25 +111,14 @@ const data = {
 };
 export function AppSidebar() {
   return (
-    <Sidebar className="border-r bg-gray-50 h-full min-h-screen">
+    <Sidebar className="h-full min-h-screen">
       {/* Sidebar Header */}
-      <SidebarHeader className="p-4 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-b-lg">
-        <Card className="bg-transparent shadow-none">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-xl font-semibold">
-              <Laptop className="mr-2 inline-block" />
-              TNO ADMIN
-            </CardTitle>
-          </CardHeader>
-        </Card>
+      <SidebarHeader className="h-24 p-0 mb-1">
+        <SidebarHeaderComponent/>
       </SidebarHeader>
-      {/* User Menu */}
-      <UserMenu/>
       {/* Sidebar Content */}
-      <SidebarContent>
-      <SidebarContent>
+      <SidebarContent className="bg-[#4D44B5] text-white rounded-md">
         <NavMain items={data.navMain} />
-      </SidebarContent>
       </SidebarContent>
     </Sidebar>
   );

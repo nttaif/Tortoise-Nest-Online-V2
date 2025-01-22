@@ -1,13 +1,18 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/admin/sidebar/sidebar.admin.component";
+import { Button } from "@/components/ui/button";
+import { Bell, MessageCircle, Moon, Search } from "lucide-react";
+import Image from "next/image";
+import NavAdminComponent from "@/components/admin/nav/nav.admin.component";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        <div className="p-4">{children}</div>
+      <main className="flex flex-col w-full h-screen">
+        <NavAdminComponent />
+        {/* Nội dung chính */}
+        <div className="p-4 flex-grow">{children}</div>
       </main>
     </SidebarProvider>
   );
