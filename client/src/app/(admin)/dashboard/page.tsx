@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-
 // src/app/dashboard/page.tsx
 const DashboardPage = () => {
     return (
