@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 export default function page() {
   return (
@@ -7,12 +7,18 @@ export default function page() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
         {/* Row 1 */}
         <div className="flex justify-between">
-          <span className="font-semibold text-lg text-gray-600">Registration Date</span>
-          <span className="text-lg text-gray-800">February 28, 2026 8:01 am</span>
+          <span className="font-semibold text-lg text-gray-600">
+            Registration Date
+          </span>
+          <span className="text-lg text-gray-800">
+            February 28, 2026 8:01 am
+          </span>
         </div>
         {/* Row 2 */}
         <div className="flex justify-between">
-          <span className="font-semibold text-lg text-gray-600">First Name</span>
+          <span className="font-semibold text-lg text-gray-600">
+            First Name
+          </span>
           <span className="text-lg text-gray-800">John</span>
         </div>
         {/* Row 3 */}
@@ -32,12 +38,16 @@ export default function page() {
         </div>
         {/* Row 6 */}
         <div className="flex justify-between">
-          <span className="font-semibold text-lg text-gray-600">Phone Number</span>
+          <span className="font-semibold text-lg text-gray-600">
+            Phone Number
+          </span>
           <span className="text-lg text-gray-800">+1-202-555-0174</span>
         </div>
         {/* Row 7 */}
         <div className="flex justify-between">
-          <span className="font-semibold text-lg text-gray-600">Skill/Occupation</span>
+          <span className="font-semibold text-lg text-gray-600">
+            Skill/Occupation
+          </span>
           <span className="text-lg text-gray-800">Application Developer</span>
         </div>
       </div>
@@ -51,6 +61,5 @@ export default function page() {
         </p>
       </div>
     </div>
-  )
+  );
 }
-
