@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import '../shared/styles/globals.css';
 export default function RootLayout({
     children,
@@ -9,6 +10,7 @@ export default function RootLayout({
         <body>
           {/* Layout UI */}
           {/* Place children where you want to render a page or nested layout */}
+          <Toaster position="top-right" />
           <main>{children}</main>
         </body>
       </html>

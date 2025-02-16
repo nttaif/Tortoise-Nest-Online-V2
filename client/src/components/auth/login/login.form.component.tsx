@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
-import { Checkbox } from '../ui/checkbox'
+import { Button } from '../../ui/button'
+import { Input } from '../../ui/input'
+import { Checkbox } from '../../ui/checkbox'
 import FormInfouserComponents from './form.infouser.components'
 import FormInfoUserComponents from './form.infouser.components'
 

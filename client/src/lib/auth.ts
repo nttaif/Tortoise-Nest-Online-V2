@@ -1,0 +1,107 @@
+import api from "@/apis/common/lib/axios";
+import { UserType } from "@/types/UserType";
+import NextAuth, { CredentialsSignin, DefaultSession, User } from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+// Custom error classes for invalid credentials.
+class InvalidCredentials extends CredentialsSignin {
+  code: string;
+
+  constructor(error: string) {
+    super(); // Call the parent class constructor
+    this.code = error; // Assign the passed error string to the code property
+  }
+}
+
+class UserNotFound extends CredentialsSignin {
+  code = "User_not_found";
+}
+/**
+ * Utility function to check if a token is expired
+ * Adds a small buffer to prevent edge cases
+ */
+const isTokenExpired = (exp?: number): boolean => {
+  if (!exp) return true;
+  // Add 30-second buffer before actual expiration
+  return Date.now() >= exp * 1000 - 30000;
+};
+
+declare module "next-auth" {
+  interface User {
+    access_token: string;
+    exp: number;
+    organizationId?: string;
+  }
+
+  interface Session {
+    user: User & DefaultSession["user"];
+  }
+}
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers: [
+    Credentials({
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize: async (credentials) => {
+        try {
+          // Add logic here to look up the user from the credentials supplied
+          const response = await api.post<User>("api/auth/login", {
+            data: {
+              username: credentials.username,
+              password: credentials.password,
+            },
+          });
+          if (!response || !response.access_token) {
+            // No user found, so this is their first attempt to login
+            // Optionally, this is also the place you could do a user registration
+            throw new InvalidCredentials("No access token found");
+          }
+          const userResponse = await api.get<UserType>("/api/auth/me", {
+            headers: { Authorization: `Bearer ${response.access_token}` },
+          });
+          // If no user details are found, return null
+          if (!userResponse) throw new UserNotFound();
+          // return user object with their profile data
+          return {
+            id: userResponse._id,
+            name: `${userResponse.firstName} ${userResponse.lastName}`,
+            email: userResponse.email,
+            access_token: response.access_token,
+            exp: response.exp,
+          };
+        } catch (error) {
+          console.log(error);
+          throw new InvalidCredentials(error as string);
+        }
+      },
+    }),
+  ],
+  callbacks: {
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          ...session.user,
+          id: token.sub!,
+          access_token: token.access_token as string,
+          exp: token.exp!,
+        };
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+        token.access_token = user.access_token;
+        token.exp = user.exp;
+      }
+      return token;
+    },
+  },
+  pages: {
+    signIn: "/login",
+  },
+});
