@@ -7,8 +7,8 @@ import FormInfoUserComponents from './form.infouser.components'
 
 export default function LoginFormComponent() {
   return (
-    <div className="w-full max-w-md bg-gray-800 p-8 rounded-md  text-white  ">
-      <h1 className="text-2xl text-white mb-8 font-bold ">Welcome back TNO </h1>
+    <div className="w-full max-w-md bg-white p-8 rounded-md  text-black  ">
+      <h1 className="text-2xl text-black mb-8 font-bold text-center ">Welcome back TNO </h1>
       <FormInfoUserComponents></FormInfoUserComponents>
       <div className='mt-10' >
       <p className="text-center text-gray-400 text-sm mb-6">

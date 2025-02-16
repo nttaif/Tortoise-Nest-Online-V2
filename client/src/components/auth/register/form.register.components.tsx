@@ -39,6 +39,7 @@ const FormSchema = z
   export default function FormRegisterComponents() {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
+        mode: "onChange",
         defaultValues: {
           email: "",
           password: "",
@@ -100,7 +101,7 @@ const FormSchema = z
         />
         <hr className="h-[0.1px] my-8 bg-gray-200 border-0 "></hr>
         <div className="flex flex-col p-2 gap-4 w-full max-w-sm mx-auto">
-            <Button className="flex items-center justify-center gap-2 bg-white text-black hover:bg-[#FFFCFC] w-full">
+            <Button variant="outline" className="flex items-center justify-center gap-2 bg-white text-black hover:bg-[#FFFCFC] w-full">
               <GoogleIcon  />
               <span className="text-sm sm:text-base">Sign up with Google</span>
             </Button>

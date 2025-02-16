@@ -20,6 +20,7 @@ import { useTheme } from "next-themes";
 import { Loader2 } from "lucide-react";
 import api, { APIError } from "@/apis/common/lib/axios";
 import { authenticate } from "@/components/common/action";
+import { FacebookIcon, GithubIcon, GoogleIcon } from "../../../../public/icon/icon";
 /**
  * Form validation schema
  */
@@ -194,7 +195,23 @@ export default function FormInfoUserComponents() {
             </FormItem>
           )}
         />
+      <hr className="h-[0.1px] my-8 bg-gray-200 border-0 "></hr>
+        <div className="flex flex-col p-2 gap-4 w-full max-w-sm mx-auto">
+            <Button variant="outline" className="flex items-center justify-center gap-2 bg-white text-black hover:bg-[#FFFCFC] w-full">
+              <GoogleIcon  />
+              <span className="text-sm sm:text-base">Login with Google</span>
+            </Button>
 
+            <Button className="flex items-center justify-center gap-2 w-full bg-blue-500 hover:bg-blue-600">
+              <FacebookIcon  />
+              <span className="text-sm sm:text-base">Login with Facebook</span>
+            </Button>
+
+            <Button variant="outline" className="flex items-center justify-center gap-2 w-full bg-white text-black hover:bg-[#FFFCFC]">
+              <GithubIcon  />
+              <span className="text-sm sm:text-base">Login with Github</span>
+            </Button>
+          </div>
         <Button
           type="submit"
           disabled={isLoading || !form.formState.isValid}

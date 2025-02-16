@@ -5,8 +5,8 @@ import { AvatarFallback, AvatarImage } from "../../ui/avatar";
 
 export default function PictureMainAuthComponents() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-blue-500 px-4">
-      <div className="w-full max-w-3xl bg-blue-500 text-white outline-none space-y-6">
+    <div className="flex justify-center items-center min-h-screen px-4">
+      <div className="w-full max-w-3xl text-white outline-none space-y-6">
         <CardHeader>
           <div className="flex items-center">
             <Avatar className="w-12 h-12">
@@ -31,22 +31,22 @@ export default function PictureMainAuthComponents() {
           <div className="flex flex-col md:flex-row items-center justify-center md:justify-start space-y-4 md:space-y-0">
             <div className="flex -space-x-4">
               <img
-                className="w-10 h-10 rounded-full border-2 border-blue-500"
+                className="w-10 h-10 rounded-full border-2 border-white"
                 src="https://randomuser.me/api/portraits/men/32.jpg"
                 alt="User 1"
               />
               <img
-                className="w-10 h-10 rounded-full border-2 border-blue-500"
+                className="w-10 h-10 rounded-full border-2 border-white"
                 src="https://randomuser.me/api/portraits/women/44.jpg"
                 alt="User 2"
               />
               <img
-                className="w-10 h-10 rounded-full border-2 border-blue-500"
+                className="w-10 h-10 rounded-full border-2 border-white"
                 src="https://randomuser.me/api/portraits/men/65.jpg"
                 alt="User 3"
               />
               <img
-                className="w-10 h-10 rounded-full border-2 border-blue-500"
+                className="w-10 h-10 rounded-full border-2 border-white"
                 src="https://randomuser.me/api/portraits/women/12.jpg"
                 alt="User 4"
               />
