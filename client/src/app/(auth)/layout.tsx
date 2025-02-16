@@ -1,4 +1,4 @@
-import PictureMainAuthComponents from "@/components/auth/picture.main.auth.components";
+import PictureMainAuthComponents from "@/components/auth/login/picture.main.auth.components";
 
 export default function LayoutAuth({ children }: { children: React.ReactNode }) {
   return (

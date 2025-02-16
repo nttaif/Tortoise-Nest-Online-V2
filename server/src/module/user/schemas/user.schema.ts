@@ -22,6 +22,9 @@ export class User {
   @Prop({ required: true })
   password: string;
 
+  @Prop({ default: 'Student' })
+  role: string;
+
   @Prop({ default: false })
   isActive: boolean;
 
