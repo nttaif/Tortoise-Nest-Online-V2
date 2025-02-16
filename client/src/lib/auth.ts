@@ -29,7 +29,6 @@ declare module "next-auth" {
   interface User {
     access_token: string;
     exp: number;
-    organizationId?: string;
   }
 
   interface Session {
@@ -48,12 +47,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
+          console.log(">>>>>>>>>>credentials", credentials);
           // Add logic here to look up the user from the credentials supplied
-          const response = await api.post<User>("api/auth/login", {
+          const response = await api.post<User>("/api/auth/signin", {
             data: {
               username: credentials.username,
               password: credentials.password,
-            },
+            }
           });
           if (!response || !response.access_token) {
             // No user found, so this is their first attempt to login

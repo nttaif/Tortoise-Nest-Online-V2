@@ -20,6 +20,7 @@ import { useTheme } from "next-themes";
 import { Loader2 } from "lucide-react";
 import api, { APIError } from "@/apis/common/lib/axios";
 import { signIn } from "@/lib/auth";
+import { authenticate } from "@/components/common/action";
 /**
  * Form validation schema
  */
@@ -74,11 +75,7 @@ export default function FormInfoUserComponents() {
       
       // const result = await api.post<ApiResponse>("/api/auth/signin",{data: values});
       // console.log(">>>>>>>>>>result", result?.error);
-      const result = await signIn("credentials", {
-        username: values.username,
-        password: values.password,
-        redirect: false,
-      });
+      const result = await authenticate(values.username, values.password);
       if (!result) {
         throw new Error("Authentication service unavailable");
       }

@@ -22,15 +22,12 @@ type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 const PUBLIC_ROUTES = [
   '/auth/signin',
   '/auth/signout',
-  '/public/*',
-  '/health',
 ] as const;
 
 // Helper to check if route is public
 const isPublicRoute = (url: string): boolean => {
   // Remove /api prefix if it exists
   const normalizedUrl = url.replace(/^\/api/, '');
-  
   return PUBLIC_ROUTES.some(route => {
     // Handle wildcard routes (e.g., /public/*)
     if (route.endsWith('*')) {
