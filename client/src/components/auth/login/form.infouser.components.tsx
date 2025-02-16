@@ -81,14 +81,30 @@ export default function FormInfoUserComponents() {
       }
       if (result.error) {
         // Handle specific error cases
-        const errorMessage =
-          result.error === "CredentialsSignin"
-            ? "Invalid username or password"
-            : "Authentication failed";
-
-        toast.error(errorMessage, {
-          description: "Please check your credentials and try again",
-        });
+        if(result.error === "Account is not activity") {
+          toast.error("Account is not activity", {
+            description: "Please contact admin to active your account",
+          });
+          return
+        }
+        if(result.error === "Username or password invalid") {
+          toast.error("Username or password invalid", {
+            description: "Please check your credentials and try again",
+          });
+          return
+        }
+        if(result.error === "User not found") {
+          toast.error("User not found", {
+            description: "Please check your credentials and try again",
+          });
+          return
+        }
+        if(result.error === "InvalidCredentials") {
+          toast.error("Invalid credentials", {
+            description: "Please check your credentials and try again",
+          });
+          return
+        }
 
         // Focus password field for better UX
         form.setFocus("password");

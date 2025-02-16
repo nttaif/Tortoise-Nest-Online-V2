@@ -1,5 +1,5 @@
 'use server'
-import { signIn } from "@/lib/auth"
+import { InvalidCredentials, signIn } from "@/lib/auth"
 //call to server
 //server returns response and we return to client
 export async function authenticate(username: string, password: string) {
@@ -12,6 +12,9 @@ export async function authenticate(username: string, password: string) {
     });
     return r;
   } catch (error) {
-    console.log(">>>>>>>>>>error", error);
+    if (error instanceof InvalidCredentials) {
+    return { error: error?.code };
+    }
+    return { error: "Unknown" };
   }
 }

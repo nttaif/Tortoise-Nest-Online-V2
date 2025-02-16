@@ -1,9 +1,10 @@
-import api from "@/apis/common/lib/axios";
+import api, { APIError } from "@/apis/common/lib/axios";
 import { UserType } from "@/types/UserType";
 import NextAuth, { CredentialsSignin, DefaultSession, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+
 // Custom error classes for invalid credentials.
-class InvalidCredentials extends CredentialsSignin {
+export class InvalidCredentials extends CredentialsSignin {
   code: string;
 
   constructor(error: string) {
@@ -47,7 +48,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          console.log(">>>>>>>>>>credentials", credentials);
           // Add logic here to look up the user from the credentials supplied
           const response = await api.post<User>("/api/auth/signin", {
             data: {
@@ -74,7 +74,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             exp: response.exp,
           };
         } catch (error) {
-          console.log(error);
+          if (error instanceof APIError) {
+            throw new InvalidCredentials(error.message);
+          }
           throw new InvalidCredentials(error as string);
         }
       },
