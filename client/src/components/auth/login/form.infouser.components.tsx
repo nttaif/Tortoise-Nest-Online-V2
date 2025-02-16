@@ -19,7 +19,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import { Loader2 } from "lucide-react";
 import api, { APIError } from "@/apis/common/lib/axios";
-import { signIn } from "@/lib/auth";
 import { authenticate } from "@/components/common/action";
 /**
  * Form validation schema
@@ -52,7 +51,6 @@ export default function FormInfoUserComponents() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { theme, setTheme } = useTheme();
 
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
