@@ -51,7 +51,7 @@ export class UserService {
     lastName: string;
     code_id: string;
   }> {
-    const emailExist = await this.checEmailExist(createUserDto.email);
+    const emailExist = await this.checkEmailExist(createUserDto.email);
     if (emailExist) {
       throw new BadRequestException('Email already exist');
     }
@@ -63,6 +63,7 @@ export class UserService {
         password: hashedPassword,
         email: createUserDto.email,
         lastName: createUserDto.lastName,
+        role: createUserDto.role || 'Student',
         address: createUserDto.address || 'No information yet',
         codeId: uuidv4().replace(/\D/g, '').slice(0, 8),
         codeExpired: dayjs().add(5, 'minutes'),
@@ -214,7 +215,7 @@ export class UserService {
    * Check email exist in the database
    * @returns ObjectID
    */
-  checEmailExist = async (
+  checkEmailExist = async (
     email: string,
   ): Promise<{ _id: Types.ObjectId } | null> =>
     await this.userModel.exists({ email: email });
