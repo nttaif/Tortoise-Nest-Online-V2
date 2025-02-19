@@ -1,5 +1,4 @@
 "use client"
-
 import * as React from "react"
 import {
   ColumnDef,
@@ -16,7 +15,6 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -35,74 +33,56 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { ResponseListData } from "@/types/ResponseListData"
+import { UserType } from "@/types/UserType"
+import { Checkbox } from "@/components/ui/checkbox"
 
-const data: Teacher[] = [
-  {
-    id: "1",
-    name: "Long",
-    specialization:"CNPM",
-    qualification:"Ths",
-    fees: 316,
-    email:"ntlong@gmail.com",
-    status: "Good",
-  },
-  {
-    id: "2",
-    name:"Tai",
-    specialization:"CNPM",
-    qualification:"Ths",
-    fees: 242,
-    email:"Tai@gmail.com",
-    status: "Bad",
-  },
-  {
-    id: "3",
-    name:"Nhan",
-    specialization:"CNPM",
-    qualification:"Ths",
-    fees: 837,
-    email:"nhan@gmail.com",
-    status: "Good",
-  },
-  {
-    id: "4",
-    name:"Vi",
-    specialization:"CNPM",
-    qualification:"Ths",
-    fees: 874,
-    email:"vi@gmail.com",
-    status: "Bad",
-  },
-  {
-    id: "5",
-    name:"Quynh",
-    specialization:"CNPM",
-    qualification:"Ths",
-    fees: 721,
-    email:"quynh@gmail.com",
-    status: "Good",
-  },
-]
-
-export type Teacher = {
-  id: string
-  name: string
-  specialization: string
-  qualification: string
-  fees: number
-  status: "Good" | "Bad"
-  email:string,
+interface IProps {
+  data: ResponseListData | { results: UserType[] };
 }
 
-export const columns: ColumnDef<Teacher>[] = [
+export const columns: ColumnDef<UserType>[] = [
   {
-    accessorKey: "name",
+    id: "selected",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "firstName",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Name <ArrowUpDown />
+        First Name <ArrowUpDown />
+      </Button>
+    ),
+  },
+  {
+    accessorKey: "lastName",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Last Name <ArrowUpDown />
       </Button>
     ),
   },
@@ -118,46 +98,29 @@ export const columns: ColumnDef<Teacher>[] = [
     )
   },
   {
-    accessorKey: "specialization",
+    accessorKey: "role",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Specialization <ArrowUpDown />
+        Role <ArrowUpDown />
       </Button>
     ),
   },
   {
-    accessorKey: "qualification",
+    accessorKey: "isActive",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Qualification <ArrowUpDown />
+        Active <ArrowUpDown />
       </Button>
     ),
-  },
+  },  
   {
-    accessorKey: "fees",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Fees <ArrowUpDown />
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const fees = parseFloat(row.getValue("fees"))
-      return <div className="text-right font-medium">${fees.toFixed(2)}</div>
-    },
-  },
-
-  
-  {
-    accessorKey: "status",
+    accessorKey: "isClose",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -167,29 +130,27 @@ export const columns: ColumnDef<Teacher>[] = [
       </Button>
     ),
     cell: ({ row }) => {
-      const status:string = row.getValue("status") || "Unknown"; // Tránh undefined
+      const status: boolean = row.getValue("isClose"); // Tránh undefined
       return (
         <span
           className={`px-2 py-1 text-xs font-semibold rounded-md ${
-            status === "Good"
+            status === true
               ? "bg-green-200 text-green-600"
-              : status === "Bad"
+              : status === false
               ? "bg-red-200 text-red-500"
               : "bg-gray-200 text-gray-800" // Trường hợp "Unknown"
           }`}
         >
-        {status}
+          {status}
         </span>
       )
     },
   },
-
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
       const payment = row.original
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -200,11 +161,7 @@ export const columns: ColumnDef<Teacher>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
+            <DropdownMenuItem>Copy payment ID</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
             <DropdownMenuItem>View payment details</DropdownMenuItem>
@@ -215,17 +172,14 @@ export const columns: ColumnDef<Teacher>[] = [
   },
 ]
 
-export function DataTableDemo() {
+export function DataTableDemo({ data }: IProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data,
+    data: data.results, // Sử dụng dữ liệu từ props
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -242,7 +196,6 @@ export function DataTableDemo() {
       rowSelection,
     },
   })
-
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
@@ -264,77 +217,58 @@ export function DataTableDemo() {
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border ">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
-          </TableHeader >
+          </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}
-                    className={`
-                      px-2 py-2
-                      ${
-                        cell.column.id === "name" ? "text-center" :
-                        cell.column.id === "specialization" ? "text-center" :
-                        cell.column.id === "qualification" ? "text-center" :
-                        cell.column.id === "fees" ? "text-right" : // Căn phải cho cột Fees
-                        cell.column.id === "status" ? "text-center" : // Căn giữa cho Status
-                        "text-left" // Mặc định căn trái cho các cột khác
-                      }
-                    `}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                    <TableCell
+                      key={cell.id}
+                      className={`px-2 py-2 ${
+                        cell.column.id === "name" || cell.column.id === "email" || cell.column.id === "role"
+                          ? "text-center"
+                          : "text-left"
+                      }`}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
