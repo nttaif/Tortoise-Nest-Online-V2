@@ -83,8 +83,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    authorized: async ({ auth }) => {
+      return !!auth
+    },
     async session({ session, token }) {
       if (token) {
+        if (isTokenExpired(token.exp)) {
+          signOut();
+        }  
         session.user = {
           ...session.user,
           id: token.sub!,
