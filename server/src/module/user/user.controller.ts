@@ -18,12 +18,11 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Get(':page/:limitPage')
+  @Get()
   findAll(
-  @Param('page') page: number, 
-  @Param('limitPage')   limitPage: number
+    @Query() query, @Query('current') current, @Query('pageSize') pageSize
   ) {
-    return this.userService.findAll(page,limitPage);
+    return this.userService.findAll(query,+current,+pageSize);
   }
 
   @Patch(':id')
