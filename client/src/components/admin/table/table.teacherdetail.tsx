@@ -33,7 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ResponseListData } from "@/types/ResponseListData"
+import { ResponseListData } from "@/types/ResponseListTeacherData"
 import { UserType } from "@/types/UserType"
 import { Checkbox } from "@/components/ui/checkbox"
 

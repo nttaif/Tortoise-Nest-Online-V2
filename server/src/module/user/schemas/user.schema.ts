@@ -28,6 +28,19 @@ export class User {
   @Prop({ default: 'Student' })
   role: string;
 
+  @Prop()
+  major?: { name: string, color: string }[];
+
+  @Prop()
+  educationLevel?: string;
+
+  @Prop()
+  experienceYears?: number;
+
+  @Prop()
+  publications?: string[];
+
+
   @Prop({ default: false })
   isActive: boolean;
 
@@ -42,3 +55,12 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+UserSchema.pre<UserDocument>('save', function (next) {
+  if (this.role === 'Student' || this.role === 'Admin') {
+    this.major = undefined;
+    this.educationLevel = undefined;
+    this.experienceYears = undefined;
+    this.publications = undefined;
+  }
+  next();
+});

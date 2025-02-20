@@ -5,16 +5,31 @@ import { IsString, IsNotEmpty ,IsOptional} from 'class-validator';
 export class UpdateUserDto extends PartialType(CreateUserDto) {
      @IsOptional()
      @IsString()
-     @IsNotEmpty()
      firstName?: string;
 
      @IsOptional()
      @IsString()
-     @IsNotEmpty()
      lastName?: string;
 
      @IsOptional()
+     @IsString()
+     educationLevel?: string;
+ 
+     @IsOptional()
+     experienceYears?: number;
+     
+     @IsOptional()
+     major?: {name: string, color: string}[];
+
+     @IsOptional()
+     @IsString()
+     publications?: string[];
+
+     @IsOptional()
      isActive?: boolean;
+
+     @IsOptional()
+     isClose?: boolean;
 
      @IsOptional()
      @IsString()

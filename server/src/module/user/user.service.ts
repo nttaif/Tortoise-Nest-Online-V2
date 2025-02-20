@@ -58,16 +58,26 @@ export class UserService {
     }
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hashSync(createUserDto.password, salt);
+    const isTeacher =
+    createUserDto.major ||
+    !!createUserDto.educationLevel ||
+    createUserDto.experienceYears !== undefined;
     try {
       const createUser = await this.userModel.create({
         firstName: createUserDto.firstName,
         password: hashedPassword,
         email: createUserDto.email,
         lastName: createUserDto.lastName,
-        role: createUserDto.role || 'Student',
+        role: isTeacher ? 'Teacher' : 'Student',
         address: createUserDto.address || 'No information yet',
         codeId: uuidv4().replace(/\D/g, '').slice(0, 8),
         codeExpired: dayjs().add(5, 'minutes'),
+        ...(isTeacher && {
+          major: createUserDto.major,
+          educationLevel: createUserDto.educationLevel,
+          experienceYears: createUserDto.experienceYears,
+          publications: createUserDto.publications,
+        }),
       });
       return {
         _id: createUser._id,
