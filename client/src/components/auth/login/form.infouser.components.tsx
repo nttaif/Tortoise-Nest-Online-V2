@@ -21,6 +21,7 @@ import { Loader2 } from "lucide-react";
 import api, { APIError } from "@/apis/common/lib/axios";
 import { authenticate } from "@/components/common/action";
 import { FacebookIcon, GithubIcon, GoogleIcon } from "../../../../public/icon/icon";
+import { VerifyAccountDialog } from "./verify.account.dialog";
 /**
  * Form validation schema
  */
@@ -52,6 +53,7 @@ export default function FormInfoUserComponents() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isVerifyDialogOpen, setIsVerifyDialogOpen] = useState(false);
 
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
@@ -84,7 +86,7 @@ export default function FormInfoUserComponents() {
           toast.error("Account is not activity", {
             description: "Please contact admin to active your account",
           });
-          return
+          setIsVerifyDialogOpen(true);
         }
         if(result.error === "Username or password invalid") {
           toast.error("Username or password invalid", {
@@ -141,6 +143,11 @@ export default function FormInfoUserComponents() {
   };
   return (
     <Form {...form}>
+      <VerifyAccountDialog
+        isOpen={isVerifyDialogOpen}
+        onClose={() => setIsVerifyDialogOpen(false)}
+        email={form.getValues("username")}
+      />
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {/* Field: Email */}
         <FormField

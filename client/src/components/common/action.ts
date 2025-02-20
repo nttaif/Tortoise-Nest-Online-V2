@@ -21,6 +21,15 @@ export async function authenticate(username: string, password: string) {
   }
 }
 
+export async function reVerify(email: string) {
+  try {
+    const result = await api.post("/api/auth/re-verify", { data: {email:email} });
+    return result;
+  } catch (error) {
+    return { error: error };
+  }
+}
+
 export async function addUser(data:any) {
   try{
     const result = await api.post('/api/user', {data:data});
