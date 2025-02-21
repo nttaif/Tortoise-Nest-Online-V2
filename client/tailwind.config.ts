@@ -66,7 +66,16 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		  keyframes: {
+			bubble: {
+			  "0%": { transform: "translateY(0) rotate(0deg)", opacity: "1" },
+			  "100%": { transform: "translateY(-1000px) rotate(720deg)", opacity: "0" },
+			},
+		  },
+		  animation: {
+			bubble: "bubble 25s linear infinite",
+		  },
   	}
   },
   plugins: [require("tailwindcss-animate")],

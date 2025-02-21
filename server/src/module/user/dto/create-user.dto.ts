@@ -1,5 +1,4 @@
 import { IsString, IsEmail, IsNotEmpty, Min,Max, MinLength, MaxLength, IsOptional } from 'class-validator';
-import { UserDocument } from '../schemas/user.schema';
 export class CreateUserDto {
     
     @MinLength(1)
@@ -15,6 +14,25 @@ export class CreateUserDto {
     @IsOptional()
     @IsString()
     address?: string;
+
+    @IsOptional()
+    @IsString()
+    avatar?: string;
+
+    @IsOptional()
+    major?: {name: string, color: string}[];
+    
+    @IsOptional()
+    @IsString()
+    educationLevel?: string;
+
+    @IsOptional()
+    experienceYears?: number;
+
+    @IsOptional()
+    @IsString()
+    publications?: string[];
+
 
     @IsOptional()
     @IsString()

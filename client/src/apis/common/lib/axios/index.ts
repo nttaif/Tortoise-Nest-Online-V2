@@ -21,6 +21,10 @@ type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 // Define public routes configuration without /api prefix
 const PUBLIC_ROUTES = [
   '/auth/signin',
+  '/auth/re-verify',
+  '/user',
+  '/auth/verify',
+  '/auth/signup',
   '/auth/signout',
 ] as const;
 

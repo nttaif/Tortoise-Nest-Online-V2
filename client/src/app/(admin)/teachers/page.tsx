@@ -1,10 +1,15 @@
+import { SearchHeader } from "@/components/admin/teacher/seach.header";
+import { TeacherGrid } from "@/components/admin/teacher/teacher.grid";
+import { getListTeacher } from "@/components/common/action";
+
 // src/app/users/page.tsx
-const TeacherPage = () => {
+const TeacherPage = async() => {
+    const listTeacher = await getListTeacher();
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-semibold">Teacher Management</h1>
-        <p>Manage users here.</p>
-      </div>
+      <main className="min-h-screen p-4 md:p-8">
+      <SearchHeader listTeacher={listTeacher}/>
+      <TeacherGrid listTeacher={listTeacher}/>
+    </main>
     );
   };
   

@@ -13,6 +13,7 @@ import { ChangePasswordDto } from './dto/change.pasword.dto';
 import { ResponseUser } from './dto/responses.user.dto';
 import e, { response } from 'express';
 import { plainToInstance } from 'class-transformer';
+import aqp from 'api-query-params';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
@@ -28,7 +29,7 @@ export class UserService {
    * find user by email
    */
   async findUserByEmail(email: string) {
-    return await this.userModel.findOne({ email });
+    return await this.userModel.findOne({ email }).select('+password');
   }
 
   /**
@@ -57,16 +58,26 @@ export class UserService {
     }
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hashSync(createUserDto.password, salt);
+    const isTeacher =
+    createUserDto.major ||
+    !!createUserDto.educationLevel ||
+    createUserDto.experienceYears !== undefined;
     try {
       const createUser = await this.userModel.create({
         firstName: createUserDto.firstName,
         password: hashedPassword,
         email: createUserDto.email,
         lastName: createUserDto.lastName,
-        role: createUserDto.role || 'Student',
+        role: isTeacher ? 'Teacher' : 'Student',
         address: createUserDto.address || 'No information yet',
         codeId: uuidv4().replace(/\D/g, '').slice(0, 8),
         codeExpired: dayjs().add(5, 'minutes'),
+        ...(isTeacher && {
+          major: createUserDto.major,
+          educationLevel: createUserDto.educationLevel,
+          experienceYears: createUserDto.experienceYears,
+          publications: createUserDto.publications,
+        }),
       });
       return {
         _id: createUser._id,
@@ -94,33 +105,35 @@ export class UserService {
    * Step 6: return users and total and totalPage
    * @returns User[] , total , totalPage
    */
-  async findAll(
-    page: number,
-    limitPage: number,
-  ): Promise<{
-    users: ResponseUser[] | undefined;
-    total: number;
-    totalPage: number;
-  }> {
-    if (page <= 0 || limitPage <= 0) {
-      page = 1;
-      limitPage = 1;
-    }
-    const skip = (page - 1) * limitPage;
-    const [users, total] = await Promise.all([
-      this.userModel.find().skip(skip).limit(limitPage).exec(),
-      this.userModel.countDocuments().exec(),
-    ]);
-    const userDto = plainToInstance(ResponseUser, users, {
-      excludeExtraneousValues: true,
-    });
-    let totalPage: number;
-    totalPage = Math.ceil(total / limitPage);
-    return {
-      users: userDto,
-      total,
-      totalPage,
-    };
+  async findAll(query: string, current: number, pageSize: number) {
+    const { filter, sort } = aqp(query);
+    //bỏ các tham số không cần thiết
+    if (filter.current) delete filter.current;
+    if (filter.pageSize) delete filter.pageSize;
+    //Gán giá trị mặc định nếu current hoặc pageSize không được truyền
+    if (!current) current = 1;
+    if (!pageSize) pageSize = 10;
+    //Đếm tổng số lượng bản ghi
+    const totalItems = await this.userModel.countDocuments(filter);
+    //Tính toán tổng số trang
+    const totalPage = Math.ceil(totalItems / pageSize);
+    // Tính số bản ghi cần bỏ qua
+    const skip = (current - 1) * pageSize;
+    //Lấy các kết quả theo trang và sắp xếp
+    const results = await this.userModel
+      .find(filter)
+      .limit(pageSize)
+      .skip(skip)
+      .sort(sort as any);
+    return { 
+      meta:{
+        current:current,
+        pageSize:pageSize,
+        pages:totalPage,
+        total:totalItems,
+      },
+      results
+      };
   }
 
   ////////////
