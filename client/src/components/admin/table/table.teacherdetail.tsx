@@ -179,8 +179,13 @@ export function DataTableDemo({ data }: IProps) {
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: data.results, // Sử dụng dữ liệu từ props
+    data: data.results,
     columns,
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),

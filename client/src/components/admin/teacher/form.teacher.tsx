@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { addUser, updateTeacher } from "@/components/common/action"
 import { toast } from "sonner"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Teacher } from "@/types/teacher"
+import { Teacher } from "@/types/Teacher"
 import { Pencil } from "lucide-react"
 
 type FormData = {
