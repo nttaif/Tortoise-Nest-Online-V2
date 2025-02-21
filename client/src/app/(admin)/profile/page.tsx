@@ -10,9 +10,9 @@ export default function ProfileCard() {
   const [activeTab, setActiveTab] = useState("posts");
 
   return (
-    <div className="space-y-2  ">
+    <div className="space-y-2 bg-gray-100 ">
 
-      <div className="bg-white shadow-lg rounded-sm w-full h-80  mx-auto overflow-hidden">
+      <div className="bg-white shadow-lg rounded-lg w-full h-80  mx-auto overflow-hidden">
         <div className="relative h-40 w-full">
           <img
             src="/images/cover.png"
@@ -53,7 +53,8 @@ export default function ProfileCard() {
 
       <div className="  grid grid-cols-1 lg:grid-cols-3 gap-10 py-4">
         <div className="space-y-6" >
-          <div className="shadow-lg rounded-sm w-full  mx-auto overflow-hidden col-span-1 bg-stone-200 flex flex-col items-center justify-center px-6 py-4 space-y-4">
+
+          <div className="shadow-lg rounded-lg border-white w-full  mx-auto overflow-hidden col-span-1 bg-white flex flex-col items-center justify-center px-6 py-4 space-y-4">
             {/* Thống kê */}
             <div className="flex space-x-16 text-center">
               <div>
@@ -81,7 +82,7 @@ export default function ProfileCard() {
           </div>
 
 
-          <div className="shadow-lg rounded-sm  w-full mx-auto  col-span-1 bg-stone-200 flex flex-col px-6 space-y-2">
+          <div className="shadow-lg rounded-lg border-white w-full  mx-auto overflow-hidden col-span-1 bg-white flex flex-col  px-6 py-4 space-y-4">
             <h2 className="text-left text-base font-bold text-blue-800 mt-4">Today Highlights</h2>
 
             <img src="/images/h1.png"
@@ -96,7 +97,7 @@ export default function ProfileCard() {
             </div>
           </div>
 
-          <div className="shadow-lg rounded-sm w-full mx-auto  col-span-1 bg-stone-200 flex flex-col px-6  ">
+          <div className="shadow-lg rounded-lg border-white w-full  mx-auto overflow-hidden col-span-1 bg-white flex flex-col  px-10 py-4 ">
             <h2 className="text-left text-base font-bold text-blue-800 mt-4">Interest</h2>
             <div className="grid grid-cols-3 gap-1 mt-4 ">
               <img src="/images/h2.png"
@@ -120,7 +121,10 @@ export default function ProfileCard() {
             </div>
           </div>
 
-          <div className="shadow-lg rounded-sm w-full mx-auto  col-span-1 bg-stone-200 flex flex-col px-6  ">
+
+
+
+          <div className="shadow-lg rounded-lg border-white w-full  mx-auto overflow-hidden col-span-1 bg-white flex flex-col  px-6 py-4">
             <h2 className="text-left text-base font-bold text-blue-800 mt-4">Our Latest News</h2>
             <div className="space-y-4 mt-4">
 
@@ -167,13 +171,11 @@ export default function ProfileCard() {
                   </p>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="col-span-2 shadow-lg rounded-md w-full h-full mx-auto bg-stone-200 p-4">
+        <div className="col-span-2 shadow-lg rounded-md w-full h-full mx-auto bg-white p-4">
           <div className="flex space-x-10 text-lg text-gray-600 border-b pb-3">
             <p className={`cursor-pointer ${activeTab === "posts" ? "text-blue-700 font-bold" : "hover:text-gray-800"}`} onClick={() => setActiveTab("posts")}>Posts</p>
             <p className={`cursor-pointer ${activeTab === "about" ? "text-blue-700 font-bold" : "hover:text-gray-800"}`} onClick={() => setActiveTab("about")}>About Me</p>
@@ -189,7 +191,7 @@ export default function ProfileCard() {
         </div>
 
       </div>
-    </div>
+    </div >
 
   );
 }
