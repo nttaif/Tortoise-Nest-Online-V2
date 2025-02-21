@@ -9,6 +9,7 @@ import {
   Ticket,
   Building2,
   Users,
+  Book,
 } from "lucide-react";
 import {
   Sidebar,
@@ -77,8 +78,20 @@ const data = {
         },
         {
           title: "Add New Teacher",
-          url: "teachers/add",
+          url: "teachers/",
         },
+      ],
+    },
+    {
+      title: "Courses",
+      url: "/courses",
+      icon: Book,
+      items: [
+        {
+          title: "All Courses",
+          url: "/courses",
+        },
+        
       ],
     },
     {

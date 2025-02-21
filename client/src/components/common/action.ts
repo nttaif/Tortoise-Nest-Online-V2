@@ -2,9 +2,6 @@
 import api, { APIError } from "@/apis/common/lib/axios";
 import { InvalidCredentials, signIn } from "@/lib/auth"
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
-import { UserType } from "@/types/UserType";
-import { console } from "inspector";
-import { string } from "zod";
 //call to server
 //server returns response and we return to client
 export async function authenticate(username: string, password: string) {
@@ -110,10 +107,14 @@ export async function addTeacher(data:any) {
   }
 }
 
-export async function getListTeacher() {
+export async function getListTeacher(current?:number, pageSize?:number) {
+  if(!current || !pageSize){
+    current = 1;
+    pageSize = 10000;
+  }
   let ListTeacher;
   try {
-    ListTeacher = await api.get<ResponseListTeacherData>('/api/user', { params: { current: 1, pageSize: 10,role:'Teacher' }});
+    ListTeacher = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize,role:'Teacher' }});
     return ListTeacher;
   } catch (error) {
     ListTeacher = {
@@ -126,5 +127,29 @@ export async function getListTeacher() {
       },
      };
     return ListTeacher;
+  }
+}
+
+
+export async function getListStudents(current?:number, pageSize?:number) {
+  if(!current || !pageSize){
+    current = 1;
+    pageSize = 10000;
+  }
+  let ListStudent;
+  try {
+    ListStudent = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize,role:'Student' }});
+    return ListStudent;
+  } catch (error) {
+    ListStudent = {
+      results: [],
+      meta: {
+        current: 0,
+        pageSize: 0,
+        pages: 0,
+        total: 0
+      },
+     };
+    return ListStudent;
   }
 }
