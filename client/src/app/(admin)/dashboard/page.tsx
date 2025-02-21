@@ -9,7 +9,7 @@ import { getListTeacher } from "@/components/common/action";
 
 
 const DashboardPage = async() => {
-  const getListTeachers = await getListTeacher();
+  const getListTeachers = await getListTeacher(1,12);
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="flex-grow space-y-6 p-6">
