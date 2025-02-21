@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
 const schedules = [
@@ -8,6 +9,7 @@ const schedules = [
     date: "July 20, 2023",
     time: "09:00 - 10:00 AM",
     instructor: "/placeholder.svg?height=32&width=32",
+    color: "border-primary",
   },
   {
     title: "Basic Art",
@@ -15,8 +17,24 @@ const schedules = [
     date: "July 20, 2023",
     time: "09:00 - 10:00 AM",
     instructor: "/placeholder.svg?height=32&width=32",
+    color: "border-orange-500",
   },
-  // Add more schedule data as needed
+  {
+    title: "React & Scss",
+    category: "Programming",
+    date: "July 20, 2023",
+    time: "09:00 - 10:00 AM",
+    instructor: "/placeholder.svg?height=32&width=32",
+    color: "border-yellow-500",
+  },
+  {
+    title: "Simple Past Tense",
+    category: "English",
+    date: "July 20, 2023",
+    time: "09:00 - 10:00 AM",
+    instructor: "/placeholder.svg?height=32&width=32",
+    color: "border-primary",
+  },
 ]
 
 export function SchedulePanel() {
@@ -30,7 +48,7 @@ export function SchedulePanel() {
       </Card>
 
       {schedules.map((schedule, index) => (
-        <Card key={index}>
+        <Card key={index} className={`border-l-4 ${schedule.color}`}>
           <CardContent className="flex items-center gap-4 p-4">
             <div className="flex-1 space-y-1">
               <h3 className="font-medium">{schedule.title}</h3>
@@ -51,6 +69,10 @@ export function SchedulePanel() {
           </CardContent>
         </Card>
       ))}
+
+      <Button variant="secondary" className="w-full bg-gray-100 hover:bg-primary hover:text-white transition-colors">
+        View More
+      </Button>
     </div>
   )
 }
