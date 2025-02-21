@@ -110,10 +110,10 @@ export async function addTeacher(data:any) {
   }
 }
 
-export async function getListTeacher() {
+export async function getListTeacher(current:number, pageSize:number) {
   let ListTeacher;
   try {
-    ListTeacher = await api.get<ResponseListTeacherData>('/api/user', { params: { current: 1, pageSize: 10,role:'Teacher' }});
+    ListTeacher = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize,role:'Teacher' }});
     return ListTeacher;
   } catch (error) {
     ListTeacher = {

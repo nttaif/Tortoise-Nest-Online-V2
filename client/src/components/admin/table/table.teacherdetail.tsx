@@ -33,15 +33,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ResponseListData } from "@/types/ResponseListTeacherData"
-import { UserType } from "@/types/UserType"
+import { ResponseListTeacherData } from "@/types/ResponseListTeacherData"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Teacher } from "@/types/Teacher"
 
 interface IProps {
-  data: ResponseListData | { results: UserType[] };
+  data: ResponseListTeacherData | { results: Teacher[] };
 }
 
-export const columns: ColumnDef<UserType>[] = [
+export const columns: ColumnDef<Teacher>[] = [
   {
     id: "selected",
     header: ({ table }) => (
