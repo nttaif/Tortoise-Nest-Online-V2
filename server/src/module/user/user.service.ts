@@ -1,6 +1,6 @@
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Types, UpdateWriteOpResult } from 'mongoose';
+import { Model, Types, UpdateWriteOpResult } from 'mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 import * as bcrypt from 'bcrypt';
@@ -10,9 +10,6 @@ import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { checkPassword } from 'src/util/compare.password';
 import { ChangePasswordDto } from './dto/change.pasword.dto';
-import { ResponseUser } from './dto/responses.user.dto';
-import e, { response } from 'express';
-import { plainToInstance } from 'class-transformer';
 import aqp from 'api-query-params';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
@@ -22,7 +19,11 @@ export class UserService {
    * find user by id
    */
   async findUserByID(_id: string) {
-    return await this.userModel.findOne({ _id });
+    if(!Types.ObjectId.isValid(_id)){
+      throw new BadRequestException('Invalid Mongo ObjectId')
+    }
+    const user = await this.userModel.findOne({ _id });
+    return user;
   }
   /**
    * Promise return User
@@ -137,8 +138,9 @@ export class UserService {
   }
 
   ////////////
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+   async findOne(_id: string) {
+    const user = await this.userModel.findOne({ _id: _id, role: 'Teacher' }).populate('courses').lean()
+    return user;
   }
 
   /**

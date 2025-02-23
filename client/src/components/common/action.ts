@@ -1,6 +1,7 @@
 'use server'
 import api, { APIError } from "@/apis/common/lib/axios";
 import { InvalidCredentials, signIn } from "@/lib/auth"
+import { Course } from "@/types/Courses";
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
 //call to server
 //server returns response and we return to client
@@ -151,5 +152,47 @@ export async function getListStudents(current?:number, pageSize?:number) {
       },
      };
     return ListStudent;
+  }
+}
+
+export async function getAllCourses(){
+  let listData
+  try {
+    listData = await api.get<Course[]>('/api/courses');
+    return listData;
+  } catch (error) {
+    return listData;
+  }
+}
+export async function getCoursesById(_id:string){
+  let data
+  try {
+    data = await api.get<Course>(`/api/courses/${_id}`);
+    return data;
+  } catch (error) {
+    return data;
+  }
+}
+
+export async function addCourses(courses:Course) {
+  let result
+  try{
+    const course = {
+      name: courses.name,
+      description: courses.description,
+      image: '/images/taihocbai.jpg',
+      price: courses.price,
+      discount: courses.discount,
+      status: courses.status,
+      category:'Technology',
+      teacherId: courses.teacherId._id
+    }
+     result = await api.post('/api/courses', {
+      data:course
+    });
+    return result;
+  }catch(error){
+    console.log('>>>>>>>>>check: ',error)
+    return result;
   }
 }
