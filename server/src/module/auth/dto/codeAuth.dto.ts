@@ -2,7 +2,7 @@ import { IsNotEmpty } from "class-validator";
 
 export class CodeAuthDto{
     @IsNotEmpty()
-    _id:string;
+    email:string;
     @IsNotEmpty()
     verificationCode:string;
 }

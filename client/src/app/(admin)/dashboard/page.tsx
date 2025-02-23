@@ -38,7 +38,7 @@ const DashboardPage = async() => {
           {/* Teacher Details */}
           <Card className="flex-1 min-w-[300px] shadow-lg">
             <CardHeader>
-              <CardTitle className="text-[#303972] text-xl font-semibold">Teacher Details</CardTitle>
+              <CardTitle className="text-[#303972] text-xl font-semibold">List Teacher:</CardTitle>
             </CardHeader>
 
             <CardContent>

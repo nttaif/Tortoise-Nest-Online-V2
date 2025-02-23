@@ -31,7 +31,7 @@ type FormData = {
   // rePassword: string
 }
 
-export default function AddUserComponent() {
+export default function AddStudentComponent() {
   const [isOpen, setIsOpen] = useState(false)
 
   const form = useForm<FormData>({

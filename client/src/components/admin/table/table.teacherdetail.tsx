@@ -33,15 +33,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ResponseListData } from "@/types/ResponseListData"
-import { UserType } from "@/types/UserType"
+import { ResponseListTeacherData } from "@/types/ResponseListTeacherData"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Teacher } from "@/types/Teacher"
 
 interface IProps {
-  data: ResponseListData | { results: UserType[] };
+  data: ResponseListTeacherData | { results: Teacher[] };
 }
 
-export const columns: ColumnDef<UserType>[] = [
+export const columns: ColumnDef<Teacher>[] = [
   {
     id: "selected",
     header: ({ table }) => (
@@ -179,8 +179,13 @@ export function DataTableDemo({ data }: IProps) {
   const [rowSelection, setRowSelection] = React.useState({})
 
   const table = useReactTable({
-    data: data.results, // Sử dụng dữ liệu từ props
+    data: data.results,
     columns,
+    initialState: {
+      pagination: {
+        pageSize: 5,
+      },
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),

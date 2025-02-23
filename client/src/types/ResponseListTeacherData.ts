@@ -1,11 +1,11 @@
-import { UserType } from "./UserType"
+import { Teacher } from "./Teacher";
 
-export type ResponseListData = {
+export type ResponseListTeacherData = {
     meta: {
         current: number,
         pageSize: number,
         pages: number,
         total: number
     },
-    results: UserType[]
+    results: Teacher[]
 }
