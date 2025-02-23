@@ -16,10 +16,13 @@ export class User {
   @Prop()
   address: string;
 
+  @Prop({default: 'https://res.cloudinary.com/dkkgmzpqd/image/upload/v1633660734/avatars/avt1.png'})
+  avartar: string;
+
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, select: false })
   password: string;
 
   @Prop({ default: 'Student' })

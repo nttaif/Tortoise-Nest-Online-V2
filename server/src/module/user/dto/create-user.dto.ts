@@ -18,6 +18,10 @@ export class CreateUserDto {
 
     @IsOptional()
     @IsString()
+    avatar?: string;
+
+    @IsOptional()
+    @IsString()
     role?: string;
     
     @MinLength(1)
