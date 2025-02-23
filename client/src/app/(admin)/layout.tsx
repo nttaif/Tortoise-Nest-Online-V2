@@ -11,7 +11,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex flex-col w-full h-screen">
+      <main className="flex flex-col w-full h-auto bg-[#e6ebee]">
         <NavAdminComponent />
         {/* Nội dung chính */}
         <div className="p-4 flex-grow">{children}</div>

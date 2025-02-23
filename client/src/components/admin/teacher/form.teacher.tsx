@@ -28,14 +28,14 @@ export type MajorOption = {
   color: string;
 };
 const majors = [
-  { name: "Computer Science", color: "#FF5733" },
-  { name: "Mathematics", color: "#33FF57" },
-  { name: "Physics", color: "#3357FF" },
-  { name: "Chemistry", color: "#FF33A8" },
-  { name: "Biology", color: "#33A8FF" },
-  { name: "Engineering", color: "#A833FF" },
-  { name: "Economics", color: "#FFAA33" },
-  { name: "Business Administration", color: "#33FFAA" },
+  { name: "Computer Science", color: "#fff3f0" },
+  { name: "Mathematics", color: "#ddfaea" },
+  { name: "Physics", color: "#7e93f557" },
+  { name: "Chemistry", color: "#ffeaea" },
+  { name: "Biology", color: "#33a8ff63" },
+  { name: "Engineering", color: "#a833ff3b" },
+  { name: "Economics", color: "#ffaa335c" },
+  { name: "Business Administration", color: "#33ffaa59" },
 ] as const
 
 const educationLevels = ["Bachelor's Degree", "Master's Degree", "PhD", "Post-Doctoral"] as const

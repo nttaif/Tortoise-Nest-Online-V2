@@ -90,7 +90,7 @@ export function TeacherCard({ teacher }: TeacherCardProps) {
 
       <div className="flex flex-col items-center text-center space-y-3 pt-4">
         <Avatar className="h-24 w-24">
-          <AvatarImage src={teacher.avartar} alt={teacher.lastName} />
+          <AvatarImage src={teacher.avartar} alt={teacher.lastName}/>
           <AvatarFallback>{teacher.lastName[0]}</AvatarFallback>
         </Avatar>
 
@@ -103,24 +103,30 @@ export function TeacherCard({ teacher }: TeacherCardProps) {
           {teacher.major.map((major) => (
             <span
               key={major.name}
-              className="rounded-full px-4 py-1 text-sm"
+              className="rounded-full px-4 py-1 text-xs font-semibold"
               style={{
                 backgroundColor:
-                  major.name === "Mathematics"
-                    ? major.color
-                    : major.name === "Science"
-                      ? major.color
-                      : major.name === "Art"
-                        ? major.color
-                        : major.color,
+                  major.name === "Mathematics"? major.color
+                    : major.name === "Computer Science"? major.color
+                      : major.name === "Chemistry"? major.color
+                        : major.name === "Physics"? major.color
+                        : major.name === "Biology"? major.color
+                        : major.name === "Engineering"? major.color
+                        : major.name === "Economics"? major.color
+                        : major.name === "Business Administration"? major.color
+                        :major.color,
+
                 color:
-                  major.name === "Mathematics"
-                    ? "#4CAF50"
-                    : major.name === "Science"
-                      ? "#FF7B5C"
-                      : major.name === "Art"
-                        ? "#FF4081"
-                        : "#ffffff",
+                  major.name === "Mathematics"? "#1EBA62"
+                    : major.name === "Computer Science"? "#FB7D5B"
+                      : major.name === "Chemistry"? "#fd5353"
+                        : major.name ==="Physics"? "#3554e3"
+                        : major.name ==="Biology"? "#1284d9"
+                        : major.name ==="Engineering"? "#9d19ff"
+                        : major.name ==="Economics"? "#e98c09"
+                        : major.name ==="Business Administration"? "#00c774"
+                        :"ffffff"
+                        ,
               }}
             >
               {major.name}
@@ -130,10 +136,10 @@ export function TeacherCard({ teacher }: TeacherCardProps) {
       </div>
 
       <CardFooter className="grid grid-cols-2 gap-4 mt-6">
-        <Button className="w-full bg-[#4338ca] hover:bg-[#4338ca]/90 text-white" size="lg">
+        <Button className="w-full bg-[#4D44B5] hover:bg-[#413a9a]/90 text-white" size="lg">
           Profile
         </Button>
-        <Button className="w-full bg-[#FF7B5C] hover:bg-[#FF7B5C]/90 text-white" size="lg">
+        <Button className="border-[#ebebf9] w-full bg-[#ebebf9] hover:bg-[#c8c8d4]/90 text-[#303972]" size="lg">
           Chat
         </Button>
       </CardFooter>
