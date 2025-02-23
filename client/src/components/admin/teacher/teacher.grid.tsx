@@ -1,4 +1,3 @@
-import { Teacher } from "@/types/teacher";
 import { TeacherCard } from "./teacher.card";
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
 

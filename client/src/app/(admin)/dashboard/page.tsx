@@ -9,7 +9,7 @@ import { getListTeacher } from "@/components/common/action";
 
 
 const DashboardPage = async() => {
-  const getListTeachers = await getListTeacher(1,12);
+  const getListTeachers = await getListTeacher();
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="flex-grow space-y-6 p-6">
@@ -37,7 +37,7 @@ const DashboardPage = async() => {
           {/* Teacher Details */}
           <Card className="flex-1 min-w-[300px] shadow-lg">
             <CardHeader>
-              <CardTitle className="text-[#303972] text-xl font-semibold">Teacher Details</CardTitle>
+              <CardTitle className="text-[#303972] text-xl font-semibold">List Teacher:</CardTitle>
             </CardHeader>
 
             <CardContent>

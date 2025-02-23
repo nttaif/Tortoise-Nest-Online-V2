@@ -1,68 +1,144 @@
+// "use client"
+
+// import { MoreVertical } from "lucide-react"
+// import { Button } from "@/components/ui/button"
+// import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+// import { Teacher } from "@/types/Teacher"
+// import FormTeacherComponent from "./form.teacher"
+
+
+
+// interface TeacherCardProps {
+//   teacher: Teacher
+// }
+
+// export function TeacherCard({ teacher }: TeacherCardProps) {
+//   // const getSubjectColor = (color: string) => {
+//   //   const colors = {
+//   //     green: "bg-green-100 text-green-700",
+//   //     orange: "bg-orange-100 text-orange-700",
+//   //     red: "bg-red-100 text-red-700",
+//   //   }
+//   //   return colors[color as keyof typeof colors] || colors.green
+//   // }
+//   return (
+//     <Card className="overflow-hidden">
+//       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+//         <div className="flex items-center space-x-4">
+//           <Avatar className="h-12 w-12">
+//             <AvatarImage src={teacher.avartar} alt={teacher.lastName} />
+//             <AvatarFallback>{teacher.lastName[0]}</AvatarFallback>
+//           </Avatar>
+//           <div>
+//             <h3 className="font-semibold text-[#4338ca]">{teacher.lastName}</h3>
+//             <p className="text-sm text-muted-foreground">{teacher.role}</p>
+//           </div>
+//         </div>
+//         <FormTeacherComponent
+//           mode="Edit"
+//           initialData={teacher}
+          
+//         />
+//       </CardHeader>
+//       <CardContent>
+//         <div className="flex flex-wrap gap-2">
+//           {teacher.major.map((major) => (
+//             <span
+//               key={major.name}
+//               className={`rounded-full px-3 py-1 text-xs font-medium`}
+//               style={{ backgroundColor: major.color }}
+//             >
+//               {major.name}
+//             </span>
+//           ))}
+//         </div>
+//       </CardContent>
+//       <CardFooter className="grid grid-cols-2 gap-4">
+//         <Button className="w-full bg-[#4338ca] hover:bg-[#4338ca]/90" size="sm">
+//           Profile
+//         </Button>
+//         <Button className="w-full bg-[#ff7b5c] hover:bg-[#ff7b5c]/90" size="sm">
+//           Chat
+//         </Button>
+//       </CardFooter>
+//     </Card>
+//   )
+// }
 "use client"
 
 import { MoreVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardFooter } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Teacher } from "@/types/teacher"
+import type { Teacher } from "@/types/Teacher"
 import FormTeacherComponent from "./form.teacher"
-
-
 
 interface TeacherCardProps {
   teacher: Teacher
 }
 
 export function TeacherCard({ teacher }: TeacherCardProps) {
-  // const getSubjectColor = (color: string) => {
-  //   const colors = {
-  //     green: "bg-green-100 text-green-700",
-  //     orange: "bg-orange-100 text-orange-700",
-  //     red: "bg-red-100 text-red-700",
-  //   }
-  //   return colors[color as keyof typeof colors] || colors.green
-  // }
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="flex items-center space-x-4">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={teacher.avartar} alt={teacher.lastName} />
-            <AvatarFallback>{teacher.lastName[0]}</AvatarFallback>
-          </Avatar>
-          <div>
-            <h3 className="font-semibold text-[#4338ca]">{teacher.lastName}</h3>
-            <p className="text-sm text-muted-foreground">{teacher.role}</p>
-          </div>
-        </div>
-        <FormTeacherComponent
+    <Card className="overflow-hidden p-4 max-w-sm">
+      <div className=" right-4 top-4">
+      <FormTeacherComponent
           mode="Edit"
           initialData={teacher}
-          
         />
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-wrap gap-2">
+      </div>
+
+      <div className="flex flex-col items-center text-center space-y-3 pt-4">
+        <Avatar className="h-24 w-24">
+          <AvatarImage src={teacher.avartar} alt={teacher.lastName} />
+          <AvatarFallback>{teacher.lastName[0]}</AvatarFallback>
+        </Avatar>
+
+        <div className="space-y-1">
+          <h3 className="font-semibold text-lg text-[#1E2875]">{teacher.lastName}</h3>
+          <p className="text-sm text-muted-foreground">Teacher</p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 justify-center">
           {teacher.major.map((major) => (
             <span
               key={major.name}
-              className={`rounded-full px-3 py-1 text-xs font-medium`}
-              style={{ backgroundColor: major.color }}
+              className="rounded-full px-4 py-1 text-sm"
+              style={{
+                backgroundColor:
+                  major.name === "Mathematics"
+                    ? major.color
+                    : major.name === "Science"
+                      ? major.color
+                      : major.name === "Art"
+                        ? major.color
+                        : major.color,
+                color:
+                  major.name === "Mathematics"
+                    ? "#4CAF50"
+                    : major.name === "Science"
+                      ? "#FF7B5C"
+                      : major.name === "Art"
+                        ? "#FF4081"
+                        : "#ffffff",
+              }}
             >
               {major.name}
             </span>
           ))}
         </div>
-      </CardContent>
-      <CardFooter className="grid grid-cols-2 gap-4">
-        <Button className="w-full bg-[#4338ca] hover:bg-[#4338ca]/90" size="sm">
+      </div>
+
+      <CardFooter className="grid grid-cols-2 gap-4 mt-6">
+        <Button className="w-full bg-[#4338ca] hover:bg-[#4338ca]/90 text-white" size="lg">
           Profile
         </Button>
-        <Button className="w-full bg-[#ff7b5c] hover:bg-[#ff7b5c]/90" size="sm">
+        <Button className="w-full bg-[#FF7B5C] hover:bg-[#FF7B5C]/90 text-white" size="lg">
           Chat
         </Button>
       </CardFooter>
     </Card>
   )
 }
+
 
