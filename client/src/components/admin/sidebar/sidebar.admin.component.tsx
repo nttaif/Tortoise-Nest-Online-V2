@@ -80,6 +80,10 @@ const data = {
           title: "Add New Teacher",
           url: "teachers/",
         },
+        {
+          title: "Teacher Deatils",
+          url: "teachers/",
+        },
       ],
     },
     {
