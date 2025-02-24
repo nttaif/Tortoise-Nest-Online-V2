@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -11,7 +11,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,18 +19,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import type { Course } from "@/types/Courses"
 import type { Teacher } from "@/types/Teacher"
-import { Plus } from "lucide-react"
 import Image from "next/image"
-import { courseCategories } from "@/types/Category"
-import { UploadImage } from "@/components/common/action"
 
-interface AddCourseDialogProps {
+interface EditCourseDialogProps {
+  course: Course
   teachers: Teacher[]
-  onAddCourse: (course: Partial<Course>) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export function AddCourseDialog({ teachers, onAddCourse }: AddCourseDialogProps) {
-  const [open, setOpen] = useState(false)
+export function EditCourseDialog({ course, teachers, open, onOpenChange }: EditCourseDialogProps) {
   const [imagePreview, setImagePreview] = useState<string>("")
   const [formData, setFormData] = useState({
     name: "",
@@ -39,12 +36,26 @@ export function AddCourseDialog({ teachers, onAddCourse }: AddCourseDialogProps)
     image: "",
     price: "",
     discount: "",
-    category:"",
-    status: false,
+    status: true,
     teacherId: "",
   })
 
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (course) {
+      setFormData({
+        name: course.name,
+        description: course.description,
+        image: course.image,
+        price: course.price.toString(),
+        discount: course.discount?.toString() || "",
+        status: course.status,
+        teacherId: course.teacherId._id,
+      })
+      setImagePreview(course.image)
+    }
+  }, [course])
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       const reader = new FileReader()
@@ -56,46 +67,26 @@ export function AddCourseDialog({ teachers, onAddCourse }: AddCourseDialogProps)
     }
   }
 
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      description: "",
-      image: "",
-      price: "",
-      discount: "",
-      category:"",
-      status: false,
-      teacherId: "",
-    })
-    setImagePreview("")
-  }
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
     const courseData = {
       ...formData,
       price: Number.parseFloat(formData.price),
       discount: formData.discount ? Number.parseFloat(formData.discount) : undefined,
       teacherId: teachers.find((t) => t._id === formData.teacherId),
     }
-    onAddCourse(courseData)
-    setOpen(false)
-    resetForm()
+
+    onOpenChange(false)
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add New Course
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Add New Course</DialogTitle>
-            <DialogDescription>Fill in the course details. Click submit when you're done.</DialogDescription>
+            <DialogTitle>Edit Course</DialogTitle>
+            <DialogDescription>Make changes to the course information below.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-2 gap-4">
@@ -167,27 +158,8 @@ export function AddCourseDialog({ teachers, onAddCourse }: AddCourseDialogProps)
                   onChange={(e) => setFormData((prev) => ({ ...prev, discount: e.target.value }))}
                 />
               </div>
-              
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="image">Category</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, category: value }))}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {courseCategories.map((category) => (
-                      <SelectItem key={category.name} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-            </div>
+
             <div className="space-y-2">
               <Label htmlFor="image">Course Image</Label>
               <Input id="image" type="file" accept="image/*" onChange={handleImageChange} />
@@ -208,10 +180,10 @@ export function AddCourseDialog({ teachers, onAddCourse }: AddCourseDialogProps)
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Save Changes</Button>
           </DialogFooter>
         </form>
       </DialogContent>

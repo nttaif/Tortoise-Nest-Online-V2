@@ -3,6 +3,7 @@ import api, { APIError } from "@/apis/common/lib/axios";
 import { InvalidCredentials, signIn } from "@/lib/auth"
 import { Course } from "@/types/Courses";
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
+import axios from "axios";
 //call to server
 //server returns response and we return to client
 export async function authenticate(username: string, password: string) {
@@ -180,11 +181,11 @@ export async function addCourses(courses:Course) {
     const course = {
       name: courses.name,
       description: courses.description,
-      image: '/images/taihocbai.jpg',
+      image: courses.image,
       price: courses.price,
       discount: courses.discount,
       status: courses.status,
-      category:'Technology',
+      category:courses.category,
       teacherId: courses.teacherId._id
     }
      result = await api.post('/api/courses', {
@@ -196,3 +197,28 @@ export async function addCourses(courses:Course) {
     return result;
   }
 }
+
+export const UploadImage = async (file: File) => {
+  if (!file) return null; 
+
+  const formData = new FormData();
+
+  formData.append("file", file);
+  formData.append("upload_preset",`${process.env.NEXT_PUBLIC_UPLOAD_PRESET}`);
+
+  try {
+    const response = await axios.post(
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.secure_url; // Trả về URL ảnh
+  } catch (error :any) {
+    console.error("Lỗi upload ảnh lên Cloudinary:",error.response?.data || error);
+    return null;
+  }
+};

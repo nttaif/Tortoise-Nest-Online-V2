@@ -1,4 +1,3 @@
-import { sampleCourses } from "@/data/sample.data.courses"
 import { ArrowLeft } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -7,8 +6,14 @@ import { Button } from "@/components/ui/button"
 import { notFound } from "next/navigation"
 import { getCoursesById } from "@/components/common/action"
 
-export default async function CoursePage({ params }: { params: { id: string } }) {
-  const course = await getCoursesById(params.id)
+interface CoursePageProps {
+  params: { id: string };
+}
+
+export default async function CoursePage({params}:CoursePageProps) {
+  const { id } = await params;
+  if (!id) throw new Error("Course ID is missing");
+  const course = await getCoursesById(id)
   if (!course) {
     notFound()
   }

@@ -1,5 +1,4 @@
 "use client"
-
 import * as React from "react"
 import {
   ColumnDef,
@@ -16,7 +15,6 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal, Printer, ReceiptEuroIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -26,7 +24,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -35,10 +32,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-
-import Image from "next/image"
-import { User, GraduationCap} from "lucide-react";
-import { Row } from "react-day-picker"
+import {GraduationCap} from "lucide-react";
+import { Input } from "@/components/ui/input"
 
 const data: Teacher[] = [
   {
@@ -256,9 +251,9 @@ export function StudentTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

@@ -6,6 +6,7 @@ export type Course = {
     image: string
     price: number
     discount?: number
+    category: string
     status: boolean
     teacherId: Teacher
   }
