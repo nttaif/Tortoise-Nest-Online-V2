@@ -6,13 +6,14 @@ import SidebarDashboard from "@/components/admin/main/dashboard/sidebar.dashboar
 import ChartPerfomance from "@/components/admin/main/dashboard/chart.perfomance";
 import ChartOverview from "@/components/admin/main/dashboard/chart.overview";
 import { getListTeacher } from "@/components/common/action";
+import { StudentTable } from "@/components/admin/table/table.student";
 
 
 const DashboardPage = async() => {
   const getListTeachers = await getListTeacher();
   return (
-    <div className="flex flex-col lg:flex-row">
-      <div className="flex-grow space-y-6 p-6">
+    <div className="flex flex-col lg:flex-row p-2 py-4">
+      <div className="flex-grow space-y-6 px-3">
         {/* Thống kê */}
         <StatsDashboard/>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -42,6 +43,19 @@ const DashboardPage = async() => {
 
             <CardContent>
               <DataTableDemo data={getListTeachers}/>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Student */}
+        <div className="w-full mt-6">
+          <Card className="flex-1 shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-[#303972] text-xl font-semibold">Student</CardTitle>
+            </CardHeader>
+
+            <CardContent>
+              <StudentTable></StudentTable>
             </CardContent>
           </Card>
         </div>

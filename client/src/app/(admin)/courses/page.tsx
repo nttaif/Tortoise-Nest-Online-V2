@@ -1,12 +1,16 @@
-// src/app/users/page.tsx
-const CoursesPage = () => {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-semibold">Courses Management</h1>
-        <p>Manage Courses here.</p>
-      </div>
-    );
-  };
-  
-  export default CoursesPage;
-  
+import { CourseTable } from "@/components/admin/courses/courses.table"
+import { sampleCourses, sampleTeachers } from "@/data/sample.data.courses"
+import { getAllCourses, getListTeacher } from "@/components/common/action"
+import AddCoursesButton from "@/components/admin/courses/add.courses.button"
+
+export default async function Page() {
+  const dataTeacher = await getListTeacher();
+  const dataCourses = await getAllCourses();
+  return (
+    <div className="container space-y-6 py-8">
+      <AddCoursesButton dataTeacher={dataTeacher.results}/>
+      <CourseTable teacher={dataTeacher.results} courses={dataCourses || sampleCourses} />
+    </div>
+  )
+}
+

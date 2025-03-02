@@ -1,11 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete,  HttpCode,
   HttpStatus,
-  Query, } from '@nestjs/common';
+  Query,
+  BadRequestException,
+  NotFoundException, } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { ChangePasswordDto } from './dto/change.pasword.dto';
+import { Types } from 'mongoose';
 
 @Controller('user')
 export class UserController {
@@ -24,6 +27,21 @@ export class UserController {
   ) {
     return this.userService.findAll(query,+current,+pageSize);
   }
+  
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    // Nếu cần, có thể kiểm tra tính hợp lệ của ObjectId tại đây
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid Mongo ObjectId');
+    }
+    const user = await this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+  
+  
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
