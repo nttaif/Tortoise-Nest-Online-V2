@@ -71,7 +71,6 @@ export default function FreeTrialSignupComponenst() {
               >
                 <Paperclip className="h-6 w-6 text-pink-400 transform rotate-45" />
               </motion.div>
-
               <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -91,18 +90,7 @@ export default function FreeTrialSignupComponenst() {
               >
                 Join our online learning platform and get access to quality education from the comfort of your home.
               </motion.p>
-
-              {/* Decorative pencils at the bottom */}
-              <div className="absolute bottom-0 right-0 h-32 overflow-hidden opacity-80">
-                <motion.img
-                  src="/placeholder.svg?height=150&width=300"
-                  alt="Colorful pencils"
-                  className="object-cover"
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7, duration: 0.8 }}
-                />
-              </div>
+              
             </motion.div>
 
             {/* Right side - Form */}
@@ -128,7 +116,6 @@ export default function FreeTrialSignupComponenst() {
                     required
                   />
                 </motion.div>
-u
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -174,7 +161,7 @@ u
                     type="submit"
                     className="w-full bg-black hover:bg-gray-800 text-white font-medium py-6 rounded-full transition-all duration-300"
                   >
-                    SEND REQUEST
+                    Free Trial
                   </Button>
                 </motion.div>
               </form>

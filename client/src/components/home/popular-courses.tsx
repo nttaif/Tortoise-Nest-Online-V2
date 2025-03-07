@@ -53,7 +53,6 @@ const COURSES = [
   
   // Add more courses here...
 ]
-
 export function PopularCourses() {
   return (
     <section className="py-16 bg-gray-50">

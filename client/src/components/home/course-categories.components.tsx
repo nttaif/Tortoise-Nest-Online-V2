@@ -1,5 +1,4 @@
 "use client"
-
 import { motion } from "framer-motion"
 import { GraduationCap, Palette, Monitor, User, PieChart, Video } from "lucide-react"
 

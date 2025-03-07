@@ -1,3 +1,4 @@
+import BestTeacherComponents from '@/components/home/best.teacher.components'
 import CourseCategoriesComponents from '@/components/home/course-categories.components'
 import DiscoverMoreComponents from '@/components/home/DiscoverMore.components'
 import FreeTrialSignupComponenst from '@/components/home/free.trial.signup.components'
@@ -11,7 +12,7 @@ export default function page() {
   return (
     <div>
       <div>
-      <HeaderAuth></HeaderAuth>
+      <HeaderAuth/>
       </div>
     <div className='content' >
       
@@ -21,6 +22,7 @@ export default function page() {
     <MarqueComponents></MarqueComponents>
     <CourseCategoriesComponents></CourseCategoriesComponents>
     <FreeTrialSignupComponenst></FreeTrialSignupComponenst>
+    <BestTeacherComponents></BestTeacherComponents>
     </div>
     <div className='Footer' >
     </div>

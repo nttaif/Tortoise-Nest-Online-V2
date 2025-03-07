@@ -27,7 +27,6 @@ export function CourseCard({ image, price, level, lessons, students, title, rati
           height={400}
           className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
-
         {/* Price Tag */}
         <div className="absolute right-3 top-3">
           <Badge className="bg-[#FF6B00] text-white hover:bg-[#FF6B00]/90">${price.toFixed(2)}</Badge>

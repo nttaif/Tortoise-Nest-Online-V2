@@ -105,7 +105,7 @@ const FormSchema = z
               <GoogleIcon  />
               <span className="text-sm sm:text-base">Sign up with Google</span>
             </Button>
-
+            
             <Button className="flex items-center justify-center gap-2 w-full bg-blue-500 hover:bg-blue-600">
               <FacebookIcon  />
               <span className="text-sm sm:text-base">Sign up with Facebook</span>
