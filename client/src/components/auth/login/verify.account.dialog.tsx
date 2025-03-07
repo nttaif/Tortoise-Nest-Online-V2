@@ -27,7 +27,7 @@ export function VerifyAccountDialog({ isOpen, onClose, email }: VerifyAccountDia
   const [step, setStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [verificationCode, setVerificationCode] = useState("")
-
+0
   const handleRequestCode = async () => {
     setIsLoading(true)
     try {
