@@ -17,7 +17,7 @@ export async function authenticate(username: string, password: string) {
     return r;
   } catch (error) {
     if (error instanceof InvalidCredentials) {
-    return { error: error?.code };
+      return { error: error?.code };
     }
     return { error: "Unknown" };
   }
@@ -25,7 +25,7 @@ export async function authenticate(username: string, password: string) {
 
 export async function reVerify(email: string) {
   try {
-    const result = await api.post("/api/auth/re-verify", { data: {email:email} });
+    const result = await api.post("/api/auth/re-verify", { data: { email: email } });
     return result;
   } catch (error) {
     return { error: error };
@@ -34,35 +34,35 @@ export async function reVerify(email: string) {
 
 export async function verifyCode(email: string, code: string) {
   try {
-    const result = await api.post<{message:string,error:string,statusCode:number}>("/api/auth/verify", { data: { email: email, verificationCode: code } });
+    const result = await api.post<{ message: string, error: string, statusCode: number }>("/api/auth/verify", { data: { email: email, verificationCode: code } });
     return result;
   } catch (error) {
-    if(error instanceof APIError){
+    if (error instanceof APIError) {
       return { error: error.message };
     }
     return { error: "Unknown" };
   }
 }
 
-export async function addUser(data:any) {
-  try{
+export async function addUser(data: any) {
+  try {
     const result = await api.post<{
-      _id:string,
+      _id: string,
       email: string,
       firstName: string,
       lastName: string,
       code_id: string,
-  }>('/api/user', {data:data});
+    }>('/api/user', { data: data });
     return result;
-  }catch(error){
-    if(error instanceof APIError){
+  } catch (error) {
+    if (error instanceof APIError) {
       return { error: error.message };
     }
     throw error;
   }
 }
 
-export async function updateTeacher(data:any) {
+export async function updateTeacher(data: any) {
   const dataUpdate = {
     firstName: data.firstName,
     lastName: data.lastName,
@@ -74,49 +74,49 @@ export async function updateTeacher(data:any) {
     isClose: data.isClose,
     role: data.role
   }
-  try{
+  try {
     const result = await api.patch<{
       acknowledged: boolean,
       modifiedCount: number,
       upsertedId: null,
       upsertedCount: number,
       matchedCount: number
-  }>(`/api/user/${data?._id}`, {data:dataUpdate});
+    }>(`/api/user/${data?._id}`, { data: dataUpdate });
     return result;
-  }catch(error){
-    if(error instanceof APIError){
+  } catch (error) {
+    if (error instanceof APIError) {
       return { error: error.message };
     }
     throw error;
   }
 }
 
-export async function addTeacher(data:any) {
-  try{
+export async function addTeacher(data: any) {
+  try {
     const result = await api.post<{
-      _id:string,
+      _id: string,
       email: string,
       firstName: string,
       lastName: string,
       code_id: string,
-  }>('/api/user', {data:data});
+    }>('/api/user', { data: data });
     return result;
-  }catch(error){
-    if(error instanceof APIError){
+  } catch (error) {
+    if (error instanceof APIError) {
       return { error: error.message };
     }
     throw error;
   }
 }
 
-export async function getListTeacher(current?:number, pageSize?:number) {
-  if(!current || !pageSize){
+export async function getListTeacher(current?: number, pageSize?: number) {
+  if (!current || !pageSize) {
     current = 1;
     pageSize = 10000;
   }
   let ListTeacher;
   try {
-    ListTeacher = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize,role:'Teacher' }});
+    ListTeacher = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize, role: 'Teacher' } });
     return ListTeacher;
   } catch (error) {
     ListTeacher = {
@@ -127,20 +127,20 @@ export async function getListTeacher(current?:number, pageSize?:number) {
         pages: 0,
         total: 0
       },
-     };
+    };
     return ListTeacher;
   }
 }
 
 
-export async function getListStudents(current?:number, pageSize?:number) {
-  if(!current || !pageSize){
+export async function getListStudents(current?: number, pageSize?: number) {
+  if (!current || !pageSize) {
     current = 1;
     pageSize = 10000;
   }
   let ListStudent;
   try {
-    ListStudent = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize,role:'Student' }});
+    ListStudent = await api.get<ResponseListTeacherData>('/api/user', { params: { current: current, pageSize: pageSize, role: 'Student' } });
     return ListStudent;
   } catch (error) {
     ListStudent = {
@@ -151,12 +151,12 @@ export async function getListStudents(current?:number, pageSize?:number) {
         pages: 0,
         total: 0
       },
-     };
+    };
     return ListStudent;
   }
 }
 
-export async function getAllCourses(){
+export async function getAllCourses() {
   let listData
   try {
     listData = await api.get<Course[]>('/api/courses');
@@ -165,7 +165,7 @@ export async function getAllCourses(){
     return listData;
   }
 }
-export async function getCoursesById(_id:string){
+export async function getCoursesById(_id: string) {
   let data
   try {
     data = await api.get<Course>(`/api/courses/${_id}`);
@@ -175,9 +175,9 @@ export async function getCoursesById(_id:string){
   }
 }
 
-export async function addCourses(courses:Course) {
+export async function addCourses(courses: Course) {
   let result
-  try{
+  try {
     const course = {
       name: courses.name,
       description: courses.description,
@@ -185,26 +185,26 @@ export async function addCourses(courses:Course) {
       price: courses.price,
       discount: courses.discount,
       status: courses.status,
-      category:courses.category,
+      category: courses.category,
       teacherId: courses.teacherId._id
     }
-     result = await api.post('/api/courses', {
-      data:course
+    result = await api.post('/api/courses', {
+      data: course
     });
     return result;
-  }catch(error){
-    console.log('>>>>>>>>>check: ',error)
+  } catch (error) {
+    console.log('>>>>>>>>>check: ', error)
     return result;
   }
 }
 
 export const UploadImage = async (file: File) => {
-  if (!file) return null; 
+  if (!file) return null;
 
   const formData = new FormData();
 
   formData.append("file", file);
-  formData.append("upload_preset",`${process.env.NEXT_PUBLIC_UPLOAD_PRESET}`);
+  formData.append("upload_preset", `${process.env.NEXT_PUBLIC_UPLOAD_PRESET}`);
 
   try {
     const response = await axios.post(
@@ -217,8 +217,39 @@ export const UploadImage = async (file: File) => {
       }
     );
     return response.data.secure_url; // Trả về URL ảnh
-  } catch (error :any) {
-    console.error("Lỗi upload ảnh lên Cloudinary:",error.response?.data || error);
+  } catch (error: any) {
+    console.error("Lỗi upload ảnh lên Cloudinary:", error.response?.data || error);
     return null;
   }
 };
+
+export async function updateProfile(formData: FormData) {
+  // Validate the form data
+  const firstName = formData.get("firstName") as string
+  const lastName = formData.get("lastName") as string
+  const email = formData.get("email") as string
+  const address = formData.get("address") as string
+
+  if (!firstName || !lastName || !email) {
+    return { error: "Missing required fields" }
+  }
+
+  // In a real app, you would update the database here
+  console.log("Updating profile:", { firstName, lastName, email, address })
+
+  // Simulate a delay
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+
+  return { success: true }
+}
+
+// Server action to toggle active status
+export async function toggleActiveStatus(userId: string, isActive: boolean) {
+  // In a real app, you would update the database here
+  console.log(`Setting user ${userId} active status to ${!isActive}`)
+
+  // Simulate a delay
+  await new Promise((resolve) => setTimeout(resolve, 500))
+
+  return { success: true, newStatus: !isActive }
+}
