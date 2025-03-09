@@ -4,7 +4,11 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema({ timestamps: true })
+@Schema(
+  { timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+ })
 export class User {
   _id: Types.ObjectId;
   @Prop({ required: true })
@@ -63,4 +67,10 @@ UserSchema.pre<UserDocument>('save', function (next) {
     this.publications = undefined;
   }
   next();
+});
+// Virtual populate để lấy các course của teacher
+UserSchema.virtual('courses', {
+  ref: 'Course',
+  localField: '_id',
+  foreignField: 'teacherId',
 });

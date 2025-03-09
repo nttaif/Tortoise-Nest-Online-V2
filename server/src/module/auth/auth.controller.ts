@@ -11,14 +11,11 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { SignInDto } from './dto/sign-in.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
-import { ConfirmForgotPasswordDto } from './dto/confirm-forgot-password.dto';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { LocalAuthGuard } from './passport/local-auth.guard';
-import { use } from 'passport';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
 import { CodeAuthDto } from './dto/codeAuth.dto';
 import { ResetPasswordDto } from './dto/reset.password.dto';

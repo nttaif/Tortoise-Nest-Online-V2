@@ -23,10 +23,10 @@ export default function LayoutAuth({ children }: { children: React.ReactNode }) 
       </div>
 
       {/* Layout Content */}
-      <div className="w-[45%]">{children}</div>
       <div className="w-[55%]">
         <PictureMainAuthComponents />
       </div>
+      <div className="w-[45%]">{children}</div>
     </div>
   );
 }
