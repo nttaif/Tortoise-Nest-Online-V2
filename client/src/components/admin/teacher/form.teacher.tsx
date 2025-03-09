@@ -112,7 +112,7 @@ export default function FormTeacherComponent({ mode = "Add", initialData, onSucc
     <DialogTrigger asChild>{trigger || defaultTrigger}</DialogTrigger>
       <DialogContent className="max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add New Teacher</DialogTitle>
+          <DialogTitle>{mode} Teacher</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4" noValidate>
