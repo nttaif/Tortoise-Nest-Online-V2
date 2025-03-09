@@ -1,6 +1,6 @@
 import BestTeacherComponents from '@/components/home/best.teacher.components'
 import CourseCategoriesComponents from '@/components/home/course-categories.components'
-import DiscoverMoreComponents from '@/components/home/DiscoverMore.components'
+import EducationalLayout from '@/components/home/DiscoverMore.components'
 import FreeTrialSignupComponenst from '@/components/home/free.trial.signup.components'
 import HeaderAuth from '@/components/home/HeaderHome.components'
 import MarqueComponents from '@/components/home/MarqueComponents'
@@ -15,9 +15,8 @@ export default function page() {
       <HeaderAuth/>
       </div>
     <div className='content' >
-      
     <SlideShow></SlideShow>
-    <DiscoverMoreComponents></DiscoverMoreComponents>
+    <EducationalLayout></EducationalLayout>
     <PopularCourses />
     <MarqueComponents></MarqueComponents>
     <CourseCategoriesComponents></CourseCategoriesComponents>
