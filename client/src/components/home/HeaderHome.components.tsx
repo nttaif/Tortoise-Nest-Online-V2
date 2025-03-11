@@ -32,12 +32,12 @@ import { RiArrowDropDownLine, RiMenuLine, RiSearch2Line } from "@remixicon/react
 const components_courses = [
     {
         title: "Tất cả khóa học",
-        href: "/Client/courses",
+        href: "/courses",
         description: "Xem tất cả các khóa học có sẵn.",
     },
     {
         title: "Công nghệ",
-        href: "/Client/courses?category=Technology",
+        href: "/courses?category=Technology",
         description: "Các khóa học về công nghệ thông tin và lập trình.",
     },
     {
