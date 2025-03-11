@@ -22,7 +22,7 @@ const ProfileCard: React.FC<ProfileProps> = ({ name, role, image }) => {
       <div className="relative">
         <div className={`absolute top-32 left-1/2 transform -translate-x-1/2 w-64 h-32 border-b-8 rounded-b-full transition-all duration-500 ${
         hover ? "border-teal-500" : "border-gray-200"
-        } rounded-b-[50px]`}/>
+        } `}/>
         
         <img
           src={image} 

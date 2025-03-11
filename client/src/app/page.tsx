@@ -11,8 +11,8 @@ import React from 'react'
 export default function page() {
   return (
     <div>
-      <div>
-      <HeaderAuth/>
+      <div className='sticky top-0 z-50' >
+      <HeaderAuth  />
       </div>
     <div className='content' >
     <SlideShow></SlideShow>
