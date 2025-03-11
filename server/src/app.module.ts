@@ -9,6 +9,8 @@ import { UserModule } from './module/user/user.module';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CoursesModule } from './module/courses/courses.module';
+import { TransactionsModule } from './module/transactions/transactions.module';
+import { EnrollmentsModule } from './module/enrollments/enrollments.module';
 
 const infrastructureDatabaseModule = MongooseModule.forRootAsync({
   useClass: MongooseConfigService,
@@ -26,6 +28,8 @@ const infrastructureDatabaseModule = MongooseModule.forRootAsync({
     infrastructureDatabaseModule,
     AuthModule,
     UserModule,
+    TransactionsModule,
+    EnrollmentsModule,
     CoursesModule,
     MailerModule.forRootAsync({
     imports: [ConfigModule],
