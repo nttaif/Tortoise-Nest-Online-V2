@@ -5,11 +5,9 @@ import crypto from "crypto"
 const MOMO_PARTNER_CODE = process.env.MOMO_PARTNER_CODE || ""
 const MOMO_ACCESS_KEY = process.env.MOMO_ACCESS_KEY || ""
 const MOMO_SECRET_KEY = process.env.MOMO_SECRET_KEY || ""
-
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-
     // Xác thực chữ ký từ MoMo
     const {
       partnerCode,
@@ -26,7 +24,6 @@ export async function POST(request: Request) {
       extraData,
       signature,
     } = body
-
     // Tạo chuỗi để kiểm tra chữ ký
     const rawSignature =
     `accessKey=${MOMO_ACCESS_KEY}` +
@@ -79,7 +76,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Server error" }, { status: 500 })
   }
 }
-
 // Hàm trích xuất courseId từ orderId
 function extractCourseIdFromOrderId(orderId: string): string {
   // Giả sử orderId có dạng: ORDER_timestamp_courseId
