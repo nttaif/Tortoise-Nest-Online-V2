@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { TeacherProfile } from "./teacher-profile"
 import type { Course } from "@/types/Courses"
 import { Calendar, Clock, Users, BookOpen, CheckCircle } from "lucide-react"
-import { EnrollmentForm } from "./enrollment-form"
+import { PaymentForm } from "./enrollment-form"
 
 interface CourseDetailsProps {
   course: Course
@@ -153,7 +153,7 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Giá gốc:</span>
                     <span className={course.discount ? "line-through text-muted-foreground" : "font-semibold"}>
-                      {course.price.toLocaleString("vi-VN")}đ
+                      {course.price.toLocaleString("vi-VN")} VNĐ
                     </span>
                   </div>
 
@@ -165,7 +165,7 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
                       </div>
                       <div className="flex items-center justify-between border-t pt-2">
                         <span className="font-medium">Giá cuối:</span>
-                        <span className="text-xl font-bold">{finalPrice.toLocaleString("vi-VN")}đ</span>
+                        <span className="text-xl font-bold">{finalPrice.toLocaleString("vi-VN")} VNĐ</span>
                       </div>
                     </>
                   )}
@@ -173,7 +173,7 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
 
                 <div className="space-y-3">
                   {showEnrollmentForm ? (
-                    <EnrollmentForm course={course} onCancel={() => setShowEnrollmentForm(false)} />
+                    <PaymentForm course={course} onCancel={() => setShowEnrollmentForm(false)} />
                   ) : (
                     <Button
                       className="w-full"

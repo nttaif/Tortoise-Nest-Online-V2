@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Enrollment, EnrollmentDocument } from './schemas/enrollment.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class EnrollmentsService {
@@ -12,6 +12,12 @@ export class EnrollmentsService {
     private enrollmentModel: Model<EnrollmentDocument>,
   ) {}
   async create(createEnrollmentDto: CreateEnrollmentDto): Promise<Enrollment> {
+    if (!Types.ObjectId.isValid(createEnrollmentDto.userId.toString())) {
+            throw new BadRequestException('Invalid User Id');
+    }
+    if (!Types.ObjectId.isValid(createEnrollmentDto.courseId.toString())) {
+      throw new BadRequestException('Invalid Courses Id');
+    }
     const createdEnrollment = new this.enrollmentModel({
       ...createEnrollmentDto,
       enrollmentStatus: createEnrollmentDto.enrollmentStatus || 'pending',
