@@ -37,7 +37,7 @@ const components_courses = [
     },
     {
         title: "Công nghệ",
-        href: "/Client/courses?category=Technology",
+        href: "/courses?category=Technology",
         description: "Các khóa học về công nghệ thông tin và lập trình.",
     },
     {

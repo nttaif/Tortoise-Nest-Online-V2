@@ -222,3 +222,129 @@ export const UploadImage = async (file: File) => {
     return null;
   }
 };
+
+export async function getEnrollments() {
+  try {
+    // Giả sử backend trả về mảng Enrollment
+    const result = await api.get("/api/enrollments");
+    return result; // result.data là mảng enrollment
+  } catch (error) {
+    console.error("getEnrollments error:", error);
+    return [];
+  }
+}
+
+export async function getEnrollmentById(id: string) {
+  try {
+    const result = await api.get(`/api/enrollments/${id}`);
+    return result;
+  } catch (error) {
+    console.error("getEnrollmentById error:", error);
+    return null;
+  }
+}
+
+export async function addEnrollment(data: any) {
+  try {
+    // data có thể chứa { userId, courseId, ... }
+    const result = await api.post("/api/enrollments", {
+      data,
+    });
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+export async function updateEnrollment(id: string, data: any) {
+  try {
+    const result = await api.patch(`/api/enrollments/${id}`, {
+      data,
+    });
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+export async function removeEnrollment(id: string) {
+  try {
+    const result = await api.delete(`/api/enrollments/${id}`);
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+// ---------------------------------------
+//  TRANSACTION
+// ---------------------------------------
+
+export async function getTransactions() {
+  try {
+    const result = await api.get("/api/transactions");
+    return result; // result.data là mảng transaction
+  } catch (error) {
+    console.error("getTransactions error:", error);
+    return [];
+  }
+}
+
+export async function getTransactionById(id: string) {
+  try {
+    const result = await api.get(`/api/transactions/${id}`);
+    return result;
+  } catch (error) {
+    console.error("getTransactionById error:", error);
+    return null;
+  }
+}
+
+export async function addTransaction(data: any) {
+  try {
+    const result = await api.post("/api/transactions", {
+      data,
+    });
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+export async function updateTransaction(id: string, data: any) {
+  try {
+    const result = await api.patch(`/api/transactions/${id}`, {
+      data,
+    });
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+export async function removeTransaction(id: string) {
+  try {
+    const result = await api.delete(`/api/transactions/${id}`);
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
