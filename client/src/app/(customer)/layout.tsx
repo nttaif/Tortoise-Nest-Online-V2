@@ -8,7 +8,9 @@ export default async function LayoutAuth({ children }: { children: React.ReactNo
   return (
     <div>
         <Toaster position="top-right" />
+        <div className='z-50 top-0 sticky' >
         <HeaderAuth session={session}/>
+        </div>
         <div>{children}</div>
     </div>
   );
