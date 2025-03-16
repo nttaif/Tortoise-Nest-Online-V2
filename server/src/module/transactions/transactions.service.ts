@@ -16,7 +16,6 @@ export class TransactionsService {
       ...createTransactionDto,
       userId: new Types.ObjectId(createTransactionDto.userId),
       courseId: new Types.ObjectId(createTransactionDto.courseId),
-      status: 'pending', // trạng thái mặc định là pending
     });
     return createdTransaction.save();
   }

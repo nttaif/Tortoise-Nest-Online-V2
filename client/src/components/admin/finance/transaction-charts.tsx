@@ -38,6 +38,7 @@ export function TransactionCharts({ transactions }: TransactionChartsProps) {
       success: 0,
       pending: 0,
       failed: 0,
+      cancel:0,
     }
 
     transactions.forEach((transaction) => {
@@ -49,6 +50,7 @@ export function TransactionCharts({ transactions }: TransactionChartsProps) {
       { name: "Success", value: statusCounts.success, fill: "var(--color-success)" },
       { name: "Pending", value: statusCounts.pending, fill: "var(--color-pending)" },
       { name: "Failed", value: statusCounts.failed, fill: "var(--color-failed)" },
+      { name: "Cancel", value: statusCounts.cancel, fill: "var(--color-failed)" },
     ]
   }, [transactions])
 
@@ -139,6 +141,11 @@ export function TransactionCharts({ transactions }: TransactionChartsProps) {
                         count: statusData[2].value, 
                         fill: "var(--color-failed)" 
                       },
+                      { 
+                        status: "Cancel", 
+                        count: statusData[3].value, 
+                        fill: "var(--color-failed)" 
+                      },
                     ]}
                     margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
                   >
@@ -183,6 +190,7 @@ export function TransactionCharts({ transactions }: TransactionChartsProps) {
                         { status: "Success", count: statusData[0].value, fill: "var(--color-success)" },
                         { status: "Pending", count: statusData[1].value, fill: "var(--color-pending)" },
                         { status: "Failed", count: statusData[2].value, fill: "var(--color-failed)" },
+                        { status: "Cancel", count: statusData[3].value, fill: "var(--color-failed)" },
                       ].map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.fill} />
                       ))}
@@ -191,7 +199,7 @@ export function TransactionCharts({ transactions }: TransactionChartsProps) {
                 </ResponsiveContainer>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
                 {statusData.map((entry, index) => (
                   <Card key={index}>
                     <CardContent className="p-4">

@@ -10,21 +10,21 @@ export function TransactionStats({
   transactions: ITransaction[]
 }) {
   const totalAmount = transactions.reduce((sum, transaction) => {
-    if (transaction.status === "success") {
+    if (transaction.status === "Success") {
       return sum + transaction.amount
     }
     return sum
   }, 0)
 
   const pendingAmount = transactions.reduce((sum, transaction) => {
-    if (transaction.status === "pending") {
+    if (transaction.status === "Pending") {
       return sum + transaction.amount
     }
     return sum
   }, 0)
 
-  const successCount = transactions.filter((t) => t.status === "success").length
-  const pendingCount = transactions.filter((t) => t.status === "pending").length
+  const successCount = transactions.filter((t) => t.status === "Success").length
+  const pendingCount = transactions.filter((t) => t.status === "Pending").length
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -71,9 +71,9 @@ export function TransactionStats({
           <TrendingDown className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{transactions.filter((t) => t.status === "failed").length}</div>
+          <div className="text-2xl font-bold">{transactions.filter((t) => t.status === "Failed").length}</div>
           <p className="text-xs text-muted-foreground">
-            {Math.round((transactions.filter((t) => t.status === "failed").length / transactions.length) * 100)}% of
+            {Math.round((transactions.filter((t) => t.status === "Failed").length / transactions.length) * 100)}% of
             total
           </p>
         </CardContent>
