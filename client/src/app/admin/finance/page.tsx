@@ -1,12 +1,19 @@
-// src/app/users/page.tsx
-const FinancePage = () => {
-    return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-semibold">Finance Management</h1>
-        <p>Manage finance here.</p>
-      </div>
-    );
-  };
-  
-  export default FinancePage;
-  
+import { Suspense } from "react"
+import { TransactionDashboard } from "@/components/admin/finance/transaction-dashboard"
+import { TransactionSkeleton } from "@/components/admin/finance/transaction-skeleton"
+import { getTransactions } from "@/lib/data"
+
+export default async function TransactionsPage() {
+  // Fetch transactions on the server
+  const transactions = await getTransactions()
+
+  return (
+    <main className="container mx-auto px-4 py-6 md:py-10">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Transaction Management</h1>
+      <Suspense fallback={<TransactionSkeleton />}>
+        <TransactionDashboard initialTransactions={transactions} />
+      </Suspense>
+    </main>
+  )
+}
+

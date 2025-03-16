@@ -6,7 +6,7 @@ export interface IEnrollment {
     _id: string;
     userId: string | UserType;
     courseId: string | Course;
-    enrollmentStatus: 'pending' | 'active' | 'cancelled';
+    enrollmentStatus: 'pending' | 'active' | 'cancelled'; //3 trạng thái pending, active, cancelled
     transactionId?: string | ITransaction;
     createdAt: string;
     updatedAt: string;
