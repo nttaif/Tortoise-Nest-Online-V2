@@ -348,3 +348,7 @@ export async function removeTransaction(id: string) {
     throw error;
   }
 }
+
+// ---------------------------------------
+//  Enrollments  
+// ---------------------------------------
