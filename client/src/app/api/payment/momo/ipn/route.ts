@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import crypto from "crypto"
+import { updateTransaction } from "@/components/common/action"
 
 // Thông tin xác thực MoMo
 const MOMO_PARTNER_CODE = process.env.MOMO_PARTNER_CODE || ""
@@ -56,13 +57,6 @@ export async function POST(request: Request) {
       // Thanh toán thành công
       // Cập nhật trạng thái đơn hàng trong database
       // ...
-
-      // Ví dụ: Cập nhật trạng thái khóa học đã thanh toán
-      // await db.course.update({
-      //   where: { id: extractCourseIdFromOrderId(orderId) },
-      //   data: { isPaid: true }
-      // });
-
       return NextResponse.json({ message: "Payment successful" })
     } else {
       // Thanh toán thất bại

@@ -12,10 +12,11 @@ import { Calendar, Clock, Users, BookOpen, CheckCircle } from "lucide-react"
 import { PaymentForm } from "./enrollment-form"
 
 interface CourseDetailsProps {
+  userID?:string;
   course: Course
 }
 
-export default function CourseDetails({ course }: CourseDetailsProps) {
+export default function CourseDetails({ course,userID }: CourseDetailsProps) {
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(false)
 
   // Calculate discounted price if discount exists
@@ -173,7 +174,7 @@ export default function CourseDetails({ course }: CourseDetailsProps) {
 
                 <div className="space-y-3">
                   {showEnrollmentForm ? (
-                    <PaymentForm course={course} onCancel={() => setShowEnrollmentForm(false)} />
+                    <PaymentForm userID={userID} course={course} onCancel={() => setShowEnrollmentForm(false)} />
                   ) : (
                     <Button
                       className="w-full"

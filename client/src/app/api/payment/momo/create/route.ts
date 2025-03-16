@@ -12,9 +12,9 @@ export async function POST(request: Request) {
     console.log("MoMo payment request received")
     const body = await request.json()
     console.log("Request body:", body)
-    const { courseId, courseName, amount, paymentMethod = "momo" } = body
+    const { courseId, courseName, amount, paymentMethod = "momo",idTransaction } = body
     if (!courseId || !courseName || amount === undefined) {
-      console.log("Missing required fields:", { courseId, courseName, amount })
+      console.log("Missing required fields:", { courseId, courseName, amount ,idTransaction})
       return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 })
     }
     //Chuyển đổi số tiền thành số nguyên
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 
     // Tạo requestId và orderId duy nhất
     const requestId = `${Date.now()}_${Math.floor(Math.random() * 1000)}`
-    const orderId = `ORDER_${Date.now()}_${courseId}`
+    const orderId = `ORDER_${Date.now()}_${courseId}_${idTransaction}`
     console.log("Using MoMo endpoint:", MOMO_ENDPOINT)
     console.log("Using redirect URL:", REDIRECT_URL)
     console.log("Using IPN URL:", IPN_URL)

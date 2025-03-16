@@ -8,39 +8,38 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import type { Course } from "@/types/Courses"
 import { CreditCard, Landmark, Wallet } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { addEnrollment, addTransaction } from "../common/action"
+import { ITransaction } from "@/types/ITransaction "
+import { IEnrollment } from "@/types/IEnrollment"
 // import { TestCardInfo } from "../common/test-card-info"
 
 interface PaymentFormProps {
+  userID?:string;
   course: Course
   onCancel: () => void
 }
 
-export function PaymentForm({ course, onCancel }: PaymentFormProps) {
+export function PaymentForm({ course, onCancel,userID }: PaymentFormProps) {
   const [paymentMethod, setPaymentMethod] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorDetails, setErrorDetails] = useState<string | null>(null)
   // const [showTestInfo, setShowTestInfo] = useState(false)
   const { toast } = useToast()
-
   //Tính toán giá cuối cùng sau khi áp dụng giảm giá
   const calculateFinalPrice = () => {
     let finalPrice = course.price
-
     if (course.discount) {
       finalPrice = Math.round(course.price - (course.price * course.discount) / 100)
     }
-
     //Đảm bảo số tiền nằm trong phạm vi hợp lệ của MoMo
     if (finalPrice < 1000) {
       finalPrice = 1000 // Số tiền tối thiểu
     } else if (finalPrice > 50000000) {
       finalPrice = 50000000 // Số tiền tối đa
     }
-
     //Đảm bảo số tiền là số nguyên
     return Math.round(finalPrice)
   }
-
   //Cập nhật hàm handleSubmit để xử lý các phương thức thanh toán khác nhau
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -65,7 +64,15 @@ export function PaymentForm({ course, onCancel }: PaymentFormProps) {
           amount: amount,
           paymentMethod: paymentMethod,
         })
-
+        //Tạo một record transaction xuống dưới db với trạng thái là false
+          const transaction={
+            userId: userID,
+            courseId:course._id,
+            amount: amount,
+            paymentMethod: paymentMethod,
+          }
+          const addNewTransaction = await addTransaction(transaction) as ITransaction
+          //Chuyển hướng đến trang thanh toán MoMo
         const response = await fetch("/api/payment/momo/create", {
           method: "POST",
           headers: {
@@ -74,6 +81,7 @@ export function PaymentForm({ course, onCancel }: PaymentFormProps) {
           body: JSON.stringify({
             courseId: course._id,
             courseName: course.name,
+            idTransaction:addNewTransaction._id,
             amount: amount,
             paymentMethod: paymentMethod,
           }),
@@ -87,21 +95,23 @@ export function PaymentForm({ course, onCancel }: PaymentFormProps) {
           throw new Error("API trả về định dạng không hợp lệ. Vui lòng kiểm tra logs.")
         }
 
-        const data = await response.json()
-        console.log("Payment response data:", data)
-        if (data.success && data.paymentUrl) {
-          //Tạo một record transaction xuống dưới db với trạng thái là false
-          
-
-          //Chuyển hướng đến trang thanh toán MoMo
-          window.location.href = data.paymentUrl
+        const res = await response.json()
+        console.log("Payment response data:", res)
+        if (res.success && res.paymentUrl) {
+          const enrollments ={
+            userId: userID,
+            courseId:course._id
+          }
+          const enrollment = await addEnrollment(enrollments) as IEnrollment
+          localStorage.setItem('EnrollmentID',enrollment._id)
+          window.location.href = res.paymentUrl
           return
         } else {
           // Hiển thị thông tin lỗi chi tiết nếu có
-          if (data.errorDetail) {
-            setErrorDetails(JSON.stringify(data.errorDetail, null, 2))
+          if (res.errorDetail) {
+            setErrorDetails(JSON.stringify(res.errorDetail, null, 2))
           }
-          throw new Error(data.message || "Không thể tạo yêu cầu thanh toán")
+          throw new Error(res.message || "Không thể tạo yêu cầu thanh toán")
         }
       } else {
         //Xử lý các phương thức thanh toán khác

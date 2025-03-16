@@ -10,6 +10,9 @@ import type { Course } from "@/types/Courses"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { getCourseById } from "@/lib/courses"
+import { addEnrollment, updateEnrollment, updateTransaction } from "@/components/common/action"
+import { ITransaction } from "@/types/ITransaction "
+import { IEnrollment } from "@/types/IEnrollment"
 
 interface PaymentResult {
   status: "success" | "error" | "pending"
@@ -49,11 +52,18 @@ export default function PaymentCallbackPage() {
         if (resultCode === "0") {
           status = "success"
           statusMessage = "Thanh toán thành công! Bạn đã có thể truy cập khóa học."
+          const updateTransactions = await updateTransaction(extractTransactionIdFromOrderId(orderId),{status:"Success",transactionRef:transId}) as ITransaction
+          const updateEnrollments = await updateEnrollment(localStorage.getItem('EnrollmentID') as string,{enrollmentStatus:"active",transactionId: extractTransactionIdFromOrderId(orderId)}) as IEnrollment
+          localStorage.setItem('EnrollmentID','');
         } else if (resultCode === "1006") {
           status = "pending"
+          const updateTransactions = await updateTransaction(extractTransactionIdFromOrderId(orderId),{status:"Cancel",transactionRef:transId}) as ITransaction
+          localStorage.setItem('EnrollmentID','');
           statusMessage = "Giao dịch đã bị hủy bởi người dùng."
         } else {
           status = "error"
+          const updateTransactions = await updateTransaction(extractTransactionIdFromOrderId(orderId),{status:"Failed",transactionRef:transId}) as ITransaction
+          localStorage.setItem('EnrollmentID','');
           statusMessage = `Thanh toán thất bại: ${message}`
         }
 
@@ -362,9 +372,13 @@ export default function PaymentCallbackPage() {
 }
 
 // Hàm trích xuất courseId từ orderId
-function extractCourseIdFromOrderId(orderId: string): string | undefined {
-  // Giả sử orderId có dạng: ORDER_timestamp_courseId
-  const parts = orderId.split("_")
-  return parts.length > 2 ? parts[parts.length - 1] : undefined
+function extractCourseIdFromOrderId(orderId: string): string {
+  const parts = orderId.split("_");
+  return parts[parts.length - 2];
 }
-
+function extractTransactionIdFromOrderId(orderId: string): string {
+  const parts = orderId.split("_");
+  // Giả sử orderId có dạng: ORDER_timestamp_courseId_idTransaction,
+  // phần tử cuối cùng chính là idTransaction
+  return parts[parts.length - 1];
+}
