@@ -129,6 +129,7 @@ export class AuthService {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          role:user.role,
           isActive: user.isActive,
           createdAt: (user as any).createdAt,
           updatedAt: (user as any).updatedAt,

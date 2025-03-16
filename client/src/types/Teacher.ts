@@ -1,3 +1,5 @@
+import { Course } from "./Courses"
+
 export type Teacher= {
     _id: string
     firstName: string
@@ -10,6 +12,9 @@ export type Teacher= {
     educationLevel?: string;
     experienceYears?: number;
     publications?: string[];
+    courses?: Course[]
     isActive: boolean;
     isClose: boolean;
+    createdAt: string;
+    updatedAt: string;
   }

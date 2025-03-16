@@ -1,22 +1,23 @@
-import { SchedulePanel } from '@/components/admin/student/schedule-panel'
-import DescriptionTeacherComponents from '@/components/admin/teacher/detailsTeacher/description.teacher.components'
-import DetailTeacherCompoments from '@/components/admin/teacher/detailsTeacher/detail.teacher.compoments'
+
+import TeacherProfile from '@/components/admin/teacher/detailsTeacher/teacher-profile'
+import { getTeacher } from '@/components/common/action'
+import { teacherData } from '@/data/teacher-data'
+import { Teacher } from '@/types/Teacher'
 import React from 'react'
-
-export default function page() {
+interface TeacherPageProps {
+  params: {
+    id: string
+  }
+}
+export default async function page({params}:TeacherPageProps) {
+  const teacher= await getTeacher(params.id) as Teacher
+  console.log("Check >>>>>>>>>>>>>>>: ",teacher)
   return (
-    <div className="flex flex-col sm:flex-col md:flex-row lg:flex-row xl:flex-row 2xl:flex-row gap-6">
-  {/* Main Content */}
-  <div className="w-full sm:w-full md:w-3/4 lg:w-3/4 xl:w-3/4 2xl:w-3/4 space-y-8">
-    <DetailTeacherCompoments />
-    <DescriptionTeacherComponents />
-  </div>
-
-  {/* Schedule Panel */}
-  <div className="w-full sm:w-full md:w-1/4 lg:w-1/4 xl:w-1/4 2xl:w-1/4 mt-6 md:mt-0">
-    <SchedulePanel />
-  </div>
-</div>
+    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto px-4 py-8">
+        <TeacherProfile teacher={teacher} />
+      </div>
+    </main>
 
   )
 }

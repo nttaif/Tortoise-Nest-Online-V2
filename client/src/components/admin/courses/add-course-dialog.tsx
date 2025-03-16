@@ -23,7 +23,6 @@ import type { Teacher } from "@/types/Teacher"
 import { Plus } from "lucide-react"
 import Image from "next/image"
 import { courseCategories } from "@/types/Category"
-import { UploadImage } from "@/components/common/action"
 
 interface AddCourseDialogProps {
   teachers: Teacher[]

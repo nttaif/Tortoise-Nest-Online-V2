@@ -78,7 +78,6 @@ export function TransactionCharts({ transactions }: TransactionChartsProps) {
       if (transaction.status.toLowerCase() === "success") {
         entry.amount += transaction.amount
       }
-
       entry.count++
     })
 

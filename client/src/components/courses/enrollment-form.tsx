@@ -145,7 +145,20 @@ export function PaymentForm({ course, onCancel,userID }: PaymentFormProps) {
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      {!userID ?(
+        <div className="p-6 text-center space-y-4 border border-muted rounded-lg">
+        <div className="text-amber-500 mx-auto w-12 h-12 flex items-center justify-center rounded-full bg-amber-50">
+          <Wallet className="w-6 h-6" />
+        </div>
+        <h3 className="text-lg font-medium">Vui lòng đăng nhập</h3>
+        <p className="text-sm text-muted-foreground">Bạn cần đăng nhập để tiếp tục thanh toán khóa học này.</p>
+        <Button asChild className="mt-2">
+          <a href="/login">Đăng nhập ngay</a>
+        </Button>
+      </div>
+      ):(
+
+        <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <h3 className="text-lg font-medium mb-4">Chọn phương thức thanh toán</h3>
 
@@ -249,6 +262,10 @@ export function PaymentForm({ course, onCancel,userID }: PaymentFormProps) {
           </Button>
         </div>
       </form>
+      )}
+
+
+
 
       {/* {["atm", "momo", "credit"].includes(paymentMethod) && (
         <div className="pt-4">
