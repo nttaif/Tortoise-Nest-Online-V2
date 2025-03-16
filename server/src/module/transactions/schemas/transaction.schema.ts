@@ -21,7 +21,7 @@ export class Transaction {
   @Prop({ required: true })
   amount: number;
 
-  @Prop({ default: 'pending', enum: ['pending', 'success', 'failed'] })
+  @Prop({ default: 'Pending', enum: ['Pending', 'Success', 'Failed','Cancel'] })
   status: string;
 
   @Prop()

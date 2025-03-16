@@ -6,7 +6,7 @@ export interface ITransaction {
     userId: string | UserType;
     courseId: string | Course;
     amount: number;
-    status: 'pending' | 'success' | 'failed';
+    status: 'Pending' | 'Success' | 'Failed'| 'Cancel';//3 trạng thái pending, success, failed viết hoa chữ cái đầu 
     paymentMethod?: string;
     transactionRef?: string;
     createdAt: string;
