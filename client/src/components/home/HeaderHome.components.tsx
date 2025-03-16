@@ -75,7 +75,10 @@ const components_dashboard = [
     },
 ]
 
-export default function HeaderAuth({ session }) {
+interface propSession{
+    session:any
+}
+export default function HeaderAuth({ session }:propSession) {
     const router = useRouter()
     const [isSearchOpen, setIsSearchOpen] = useState(false)
     return (
@@ -128,7 +131,7 @@ export default function HeaderAuth({ session }) {
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem className="text-base font-medium text-[#161439] hover:text-[#0d6efd]" >
-                                    <a href="home/AboutUs">About Us</a>
+                                    <a href="AboutUs">About Us</a>
                                 <NavigationMenuContent>
                                    
                                 </NavigationMenuContent>
@@ -252,7 +255,7 @@ function MobileNav() {
         </div>
     )
 }
-function UserNav({ session }) {
+function UserNav({ session }:propSession) {
     const router = useRouter()
     return (
         <DropdownMenu>

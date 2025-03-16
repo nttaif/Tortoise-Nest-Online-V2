@@ -1,3 +1,4 @@
+'use client'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, MessageCircle, Settings, User } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import React from "react";
 
@@ -66,7 +68,7 @@ export default function AvatarComponent() {
           </div>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3" onClick={ async()=>{await signOut()}}>
             <LogOut className="w-6 h-6" />       
             <div className="ml-3">
               Log out
