@@ -1,4 +1,3 @@
-import Image from "next/image";
 import BannerAboutUs from "@/components/aboutus/banner.component";
 import ImageAboutUs from "@/components/aboutus/Image.component";
 import ProfileCard from "@/components/aboutus/profilecard.component";
