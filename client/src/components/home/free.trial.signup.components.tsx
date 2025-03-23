@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Paperclip } from "lucide-react"
-import ButtonDesignPatten from "../DesignPattren/UI/Button"
+import ButtonClient from "../DesignPattren/button-client"
 
 const courses = [
   "Web Development",
@@ -158,12 +158,10 @@ export default function FreeTrialSignupComponenst() {
                   transition={{ delay: 0.4, duration: 0.5 }}
                   className="pt-2"
                 >
-                  <ButtonDesignPatten
-                    variant="media"  
-                    text="Free Trial"
-                    onClick={() => console.log("Free Trial")}
-                  >
-                  </ButtonDesignPatten>
+                 <ButtonClient
+                  label="Free trial"
+                  onClick={() => {} }
+                 />
                 </motion.div>
               </form>
             </motion.div>
