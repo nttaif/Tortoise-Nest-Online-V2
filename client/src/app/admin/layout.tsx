@@ -1,6 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/admin/sidebar/sidebar.admin.component";
-import { Button } from "@/components/ui/button";
 import { Bell, MessageCircle, Moon, Search } from "lucide-react";
 import Image from "next/image";
 import NavAdminComponent from "@/components/admin/nav/nav.admin.component";
