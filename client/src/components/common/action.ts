@@ -4,9 +4,44 @@ import { InvalidCredentials, signIn } from "@/lib/auth"
 import { Course } from "@/types/Courses";
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
 import { Teacher } from "@/types/Teacher";
+import { UserType } from "@/types/UserType";
 import axios from "axios";
 //call to server
 //server returns response and we return to client
+interface SignUpData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  rePassword: string;
+}
+
+// Kiểu phản hồi khi đăng ký thành công
+interface SignUpSuccessResponse {
+  message: string;
+}
+
+// Kiểu phản hồi khi đăng ký thất bại
+interface SignUpErrorResponse {
+  message: string;
+  error: string;
+  statusCode: number;
+}
+
+export async function signUp(data: SignUpData): Promise<SignUpSuccessResponse | SignUpErrorResponse> {
+  try {
+    const response = await api.post<SignUpSuccessResponse>('/api/auth/signUp', { data });
+    console.log('response: ',response)
+    return response; // Trả về trực tiếp kết quả
+  } catch (error) {
+    if (error instanceof APIError && error.response) {
+      // Nếu APIError chứa phản hồi, trả về nó dưới dạng SignUpErrorResponse
+      return error.response as SignUpErrorResponse;
+    }
+    throw error;
+  }
+}
+
 export async function authenticate(username: string, password: string) {
   try {
     const r = await signIn("credentials", {
@@ -23,6 +58,9 @@ export async function authenticate(username: string, password: string) {
     return { error: "Unknown" };
   }
 }
+ 
+
+
 
 export async function reVerify(email: string) {
   try {
@@ -255,6 +293,16 @@ export async function getEnrollmentById(id: string) {
     return null;
   }
 }
+  export async function getEnrollmentsByUserId(userId: string) {
+    try {
+      const result = await api.get(`/api/enrollments/user/${userId}`);
+      return result;
+    } catch (error) {
+      console.error("getEnrollmentsByUserId error:", error);
+      return null; // Trả về null nếu có lỗi
+    }
+  }
+
 
 export async function addEnrollment(data: any) {
   try {

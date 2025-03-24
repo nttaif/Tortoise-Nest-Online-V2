@@ -112,8 +112,8 @@ export function CourseTable({ courses: initialCourses ,teacher}: CourseTableProp
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
                           <Image
-                            src={course.teacherId.avartar || "/placeholder.svg"}
-                            alt={`${course.teacherId.firstName} ${course.teacherId.lastName}`}
+                            src={course.teacherId?.avartar || "/placeholder.svg"}
+                            alt={`${course.teacherId?.firstName} ${course.teacherId?.lastName}`}
                             width={24}
                             height={24}
                             className="rounded-full"
@@ -122,33 +122,33 @@ export function CourseTable({ courses: initialCourses ,teacher}: CourseTableProp
                             <Tooltip>
                               <TooltipTrigger>
                                 <span className="text-sm font-medium">
-                                  {course.teacherId.firstName} {course.teacherId.lastName}
+                                  {course.teacherId?.firstName} {course.teacherId?.lastName}
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent className="w-80">
                                 <div className="space-y-2">
                                   <div className="flex items-center gap-2">
                                     <span className="text-sm font-medium">Role:</span>
-                                    <span className="text-sm">{course.teacherId.role}</span>
+                                    <span className="text-sm">{course.teacherId?.role}</span>
                                   </div>
-                                  {course.teacherId.educationLevel && (
+                                  {course.teacherId?.educationLevel && (
                                     <div className="flex items-center gap-2">
                                       <span className="text-sm font-medium">Education:</span>
-                                      <span className="text-sm">{course.teacherId.educationLevel}</span>
+                                      <span className="text-sm">{course.teacherId?.educationLevel}</span>
                                     </div>
                                   )}
-                                  {course.teacherId.experienceYears && (
+                                  {course.teacherId?.experienceYears && (
                                     <div className="flex items-center gap-2">
                                       <span className="text-sm font-medium">Experience:</span>
-                                      <span className="text-sm">{course.teacherId.experienceYears} years</span>
+                                      <span className="text-sm">{course.teacherId?.experienceYears} years</span>
                                     </div>
                                   )}
                                   <div className="flex items-center gap-2">
                                     <span className="text-sm font-medium">Email:</span>
-                                    <span className="text-sm">{course.teacherId.email}</span>
+                                    <span className="text-sm">{course.teacherId?.email}</span>
                                   </div>
                                   <div className="flex flex-wrap gap-1">
-                                    {course.teacherId.major.map((major, index) => (
+                                    {course.teacherId?.major.map((major, index) => (
                                       <span
                                         key={index}
                                         className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold"
@@ -191,10 +191,10 @@ export function CourseTable({ courses: initialCourses ,teacher}: CourseTableProp
                     <Badge variant={course.status ? "success" : "secondary"} className="capitalize">
                       {course.status ? "Active" : "Draft"}
                     </Badge>
-                    <Badge variant={course.teacherId.isActive ? "success" : "destructive"} className="capitalize">
-                      Teacher: {course.teacherId.isActive ? "Active" : "Inactive"}
+                    <Badge variant={course.teacherId?.isActive ? "success" : "destructive"} className="capitalize">
+                      Teacher: {course.teacherId?.isActive ? "Active" : "Inactive"}
                     </Badge>
-                    {course.teacherId.isClose && (
+                    {course.teacherId?.isClose && (
                       <Badge variant="destructive" className="capitalize">
                         Closed
                       </Badge>

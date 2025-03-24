@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus
 import { EnrollmentsService } from './enrollments.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
+import { Enrollment } from './schemas/enrollment.schema';
 
 @Controller('enrollments')
 export class EnrollmentsController {
@@ -21,7 +22,11 @@ export class EnrollmentsController {
   findOne(@Param('id') id: string) {
     return this.enrollmentsService.findOne(id);
   }
-
+  @Get('user/:userId')
+  getEnrollmentsByUserId(@Param('userId') userId: string): Promise<Enrollment[]> {
+    console.log('userId', userId);
+    return this.enrollmentsService.findByUserId(userId);
+  }
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEnrollmentDto: UpdateEnrollmentDto) {
     return this.enrollmentsService.update(id, updateEnrollmentDto);

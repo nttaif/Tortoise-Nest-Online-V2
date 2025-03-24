@@ -10,7 +10,7 @@ import type { Course } from "@/types/Courses"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { getCourseById } from "@/lib/courses"
-import { addEnrollment, updateEnrollment, updateTransaction } from "@/components/common/action"
+import {updateEnrollment, updateTransaction } from "@/components/common/action"
 import { ITransaction } from "@/types/ITransaction "
 import { IEnrollment } from "@/types/IEnrollment"
 
@@ -203,13 +203,13 @@ export default function PaymentCallbackPage() {
               <div className="flex items-center">
                 <div className="relative w-5 h-5 rounded-full overflow-hidden mr-1">
                   <Image
-                    src={course.teacherId.avartar || "/placeholder.svg"}
-                    alt={course.teacherId.lastName}
+                    src={course.teacherId?.avartar || "/placeholder.svg"}
+                    alt={course.teacherId?.lastName}
                     fill
                     className="object-cover"
                   />
                 </div>
-                <span className="text-xs text-muted-foreground">{course.teacherId.lastName}</span>
+                <span className="text-xs text-muted-foreground">{course.teacherId?.lastName}</span>
               </div>
             </div>
 
