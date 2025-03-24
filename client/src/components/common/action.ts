@@ -3,6 +3,7 @@ import api, { APIError } from "@/apis/common/lib/axios";
 import { InvalidCredentials, signIn } from "@/lib/auth"
 import { Course } from "@/types/Courses";
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
+import { Teacher } from "@/types/Teacher";
 import axios from "axios";
 //call to server
 //server returns response and we return to client
@@ -129,6 +130,17 @@ export async function getListTeacher(current?:number, pageSize?:number) {
       },
      };
     return ListTeacher;
+  }
+}
+
+
+export async function getTeacher(id:string) {
+  let teacher;
+  try {
+    teacher = await api.get<Teacher>(`/api/user/${id}`);
+    return teacher;
+  } catch (error) {
+    return teacher;
   }
 }
 

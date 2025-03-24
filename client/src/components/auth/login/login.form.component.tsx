@@ -1,8 +1,4 @@
 import React from 'react'
-import { Button } from '../../ui/button'
-import { Input } from '../../ui/input'
-import { Checkbox } from '../../ui/checkbox'
-import FormInfouserComponents from './form.infouser.components'
 import FormInfoUserComponents from './form.infouser.components'
 
 export default function LoginFormComponent() {
@@ -13,7 +9,7 @@ export default function LoginFormComponent() {
       <div className='mt-10' >
       <p className="text-center text-gray-400 text-sm mb-6">
         Bạn mới đến trang TNO lần đầu tiên. Sao không thử đồng hành cùng với nhau nhỉ?{" "}
-        <a href="#" className="text-blue-500 hover:underline">
+        <a href="/register" className="text-blue-500 hover:underline">
           Tạo tài khoản
         </a>
       </p>
