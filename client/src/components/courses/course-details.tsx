@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,17 +10,55 @@ import { TeacherProfile } from "./teacher-profile"
 import type { Course } from "@/types/Courses"
 import { Calendar, Clock, Users, BookOpen, CheckCircle } from "lucide-react"
 import { PaymentForm } from "./enrollment-form"
+import type { IEnrollment } from "@/types/IEnrollment"
+import { getEnrollmentsByUserId } from "../common/action"
 
 interface CourseDetailsProps {
-  userID?:string;
+  userID?: string
   course: Course
 }
 
-export default function CourseDetails({ course,userID }: CourseDetailsProps) {
+export default function CourseDetails({ course, userID }: CourseDetailsProps) {
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(false)
+  const [isEnrolled, setIsEnrolled] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Calculate discounted price if discount exists
   const finalPrice = course.discount ? course.price - (course.price * course.discount) / 100 : course.price
+
+  // Check if user is already enrolled in this course
+  useEffect(() => {
+    async function checkEnrollment() {
+      if (!userID) {
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        setIsLoading(true)
+        const enrollments = await getEnrollmentsByUserId(userID)
+
+        if (enrollments && Array.isArray(enrollments)) {
+          // Check if this course exists in user's enrollments
+          const enrolled = enrollments.some((enrollment: IEnrollment) => {
+            // Handle both string ID and object with _id
+            const courseId =
+              typeof enrollment.courseId === "string" ? enrollment.courseId : (enrollment.courseId as any)._id
+
+            return courseId === course._id && enrollment.enrollmentStatus !== "cancelled"
+          })
+
+          setIsEnrolled(enrolled)
+        }
+      } catch (error) {
+        console.error("Error checking enrollment:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    checkEnrollment()
+  }, [userID, course._id])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -28,7 +66,9 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <Badge variant="outline">{course.category}</Badge>
-            {course.discount && course.discount > 0 ? ( <Badge className="bg-red-500">Giảm {course.discount}%</Badge>): null}
+            {course.discount && course.discount > 0 ? (
+              <Badge className="bg-red-500">Giảm {course.discount}%</Badge>
+            ) : null}
             {!course.status && <Badge variant="destructive">Không khả dụng</Badge>}
           </div>
 
@@ -173,7 +213,15 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
                 </div>
 
                 <div className="space-y-3">
-                  {showEnrollmentForm ? (
+                  {isLoading ? (
+                    <Button className="w-full" size="lg" disabled>
+                      Đang tải...
+                    </Button>
+                  ) : isEnrolled ? (
+                    <Button className="w-full" size="lg" variant="secondary" disabled>
+                      Đã tham gia
+                    </Button>
+                  ) : showEnrollmentForm ? (
                     <PaymentForm userID={userID} course={course} onCancel={() => setShowEnrollmentForm(false)} />
                   ) : (
                     <Button

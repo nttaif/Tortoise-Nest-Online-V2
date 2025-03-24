@@ -1,60 +1,35 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Transaction, TransactionDocument } from './schemas/transaction.schema';
-import { Model, Types } from 'mongoose';
+import { Transaction } from './schemas/transaction.schema';
+import { ITransactionRepository } from './repository/transaction.repository';
+
+
+export const TRANSACTION_REPOSITORY = 'TRANSACTION_REPOSITORY';
 
 @Injectable()
 export class TransactionsService {
   constructor(
-    @InjectModel(Transaction.name)
-    private transactionModel: Model<TransactionDocument>,
+    @Inject(TRANSACTION_REPOSITORY)
+    private transactionRepo: ITransactionRepository,
   ) {}
   async create(createTransactionDto: CreateTransactionDto): Promise<Transaction>{
-    const createdTransaction = new this.transactionModel({
-      ...createTransactionDto,
-      userId: new Types.ObjectId(createTransactionDto.userId),
-      courseId: new Types.ObjectId(createTransactionDto.courseId),
-    });
-    return createdTransaction.save();
+    return this.transactionRepo.create(createTransactionDto);
   }
 
   async findAll(): Promise<Transaction[]> {
-    return this.transactionModel.find()
-      .populate('userId', '-password')
-      .populate('courseId')
-      .exec();
+    return this.transactionRepo.findAll();
   }
-
+  
   async findOne(_id: string): Promise<Transaction> {
-    const transaction = await this.transactionModel.findById(_id)
-      .populate('userId', '-password')
-      .populate('courseId')
-      .exec();
-    if (!transaction) {
-      throw new NotFoundException(`Transaction with id ${_id} not found`);
-    }
-    return transaction;
+    return this.transactionRepo.findOne(_id);
   }
 
   async update(_id: string, updateTransactionDto: UpdateTransactionDto): Promise<Transaction> {
-    const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
-      _id,
-      updateTransactionDto,
-      { new: true },
-    ).exec();
-    if (!updatedTransaction) {
-      throw new NotFoundException(`Transaction with id ${_id} not found`);
-    }
-    return updatedTransaction;
+    return this.transactionRepo.update(_id, updateTransactionDto);
   }
 
   async remove(_id: string): Promise<Transaction> {
-    const deletedTransaction = await this.transactionModel.findByIdAndDelete(_id).exec();
-    if (!deletedTransaction) {
-      throw new NotFoundException(`Transaction with id ${_id} not found`);
-    }
-    return deletedTransaction;
+    return this.transactionRepo.remove(_id);
   }
 }

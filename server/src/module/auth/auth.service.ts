@@ -133,7 +133,6 @@ export class AuthService {
           isActive: user.isActive,
           createdAt: (user as any).createdAt,
           updatedAt: (user as any).updatedAt,
-          __v: user.__v,
         } as ResponseUser;
       }
     } catch (error) {

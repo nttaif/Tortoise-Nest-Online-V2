@@ -29,6 +29,4 @@ export class ResponseUser {
 @IsString()
 @Expose()
   updatedAt: Date;
-  @IsString()
-  __v: number
 }

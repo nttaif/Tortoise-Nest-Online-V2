@@ -44,7 +44,16 @@ export class EnrollmentsService {
     }
     return enrollment;
   }
-
+  async findByUserId(userId: string): Promise<Enrollment[]> {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new BadRequestException('Invalid User Id');
+    }
+    return this.enrollmentModel.find({ userId })
+      .populate('userId', '-password') // Populate userId nhưng loại bỏ trường password
+      .populate('courseId')            // Populate toàn bộ thông tin của course
+      .populate('transactionId')       // Populate toàn bộ thông tin của transaction
+      .exec();
+  }
   async update(id: string, updateEnrollmentDto: UpdateEnrollmentDto): Promise<Enrollment> {
     const updatedEnrollment = await this.enrollmentModel.findByIdAndUpdate(
       id,
