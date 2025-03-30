@@ -278,7 +278,10 @@ function UserNav({ session }:propSession) {
                 <DropdownMenuItem onClick={() => router.push(`/Admin/account/id/${session?.user?._id}`)}>
                     Thông tin cá nhân
                 </DropdownMenuItem>
-                {(session?.user?.role === "Lecturer" || session?.user?.role === "Admin") && (
+                <DropdownMenuItem onClick={() => router.push(`/schedule`)}>
+                    Lịch học
+                </DropdownMenuItem>
+                {(session?.user?.role === "Teacher" || session?.user?.role === "Admin") && (
                     <DropdownMenuItem onClick={() => router.push(`/Admin/dashboard/${session?.user?._id}`)}>
                         Chuyển đến trang giảng viên
                     </DropdownMenuItem>

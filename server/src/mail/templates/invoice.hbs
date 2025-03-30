@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Invoice from Tortoise Nest Online</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<body style="margin: 0; padding: 0; min-width: 100%; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.5; background-color: #f3f4f6; color: #333;">
+    <div style="max-width: 600px; margin: 0 auto; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+        <!-- Header -->
+        <div style="background-color: #0070f3; padding: 24px; text-align: center; color: #ffffff;">
+            <h1 style="font-size: 26px; font-weight: bold; margin: 0;">
+                Invoice from Tortoise Nest Online
+            </h1>
+        </div>
+        <!-- Content -->
+        <div style="padding: 24px; background-color: #ffffff; border-top: 4px solid #0070f3;">
+            <p style="margin: 0 0 16px 0;">Xin chào <strong>{{name}}</strong>,</p>
+            <p style="margin: 0 0 24px 0;">Cảm ơn bạn đã thanh toán. Dưới đây là chi tiết hóa đơn của bạn:</p>
+            <!-- Invoice Details -->
+            <div style="background-color: #f0f9ff; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                <p><strong>Mã giao dịch:</strong> {{transactionId}}</p>
+                <p><strong>Khóa học:</strong> {{courseName}}</p>
+                <p><strong>Số tiền:</strong> {{amount}} VND</p>
+                <p><strong>Phương thức thanh toán:</strong> {{paymentMethod}}</p>
+                <p><strong>Trạng thái:</strong> {{status}}</p>
+            </div>
+            <p style="margin: 0 0 16px 0;">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>
+        </div>
+        <!-- Divider -->
+        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 0;">
+        <!-- Footer -->
+        <div style="padding: 24px; background-color: #f9fafb; text-align: center;">
+            <p style="margin: 0 0 16px 0;">Nếu bạn cần hỗ trợ, hãy liên hệ qua 
+                <a href="mailto:support@tortoisenest.com" style="color: #0070f3; text-decoration: none;">support@tortoisenest.com</a>
+            </p>
+            <p style="font-size: 14px; color: #666; margin: 0;">
+                © 2025 Tortoise Nest Online. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -17,6 +17,6 @@ import {TransactionRepositoryImpl } from './repository/transaction.repository';
       useClass: TransactionRepositoryImpl,
     },
   ],
-  exports: [TransactionsService],
+  exports: [TransactionsService,TRANSACTION_REPOSITORY],
 })
 export class TransactionsModule {}

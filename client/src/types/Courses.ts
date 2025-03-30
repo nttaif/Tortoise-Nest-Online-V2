@@ -1,3 +1,4 @@
+import { Lesson } from "./Lesson"
 import { Teacher } from "./Teacher"
 export type Course = {
     _id: string
@@ -6,6 +7,7 @@ export type Course = {
     image: string
     price: number
     discount?: number
+    lessons?: Lesson[]
     category: string
     status: boolean
     teacherId:  Teacher

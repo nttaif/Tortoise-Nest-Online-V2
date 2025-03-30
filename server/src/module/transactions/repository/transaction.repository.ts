@@ -13,6 +13,7 @@ export interface ITransactionRepository {
     findOne(id: string): Promise<Transaction>;
     update(id: string, updateTransactionDto: UpdateTransactionDto): Promise<Transaction>;
     remove(id: string): Promise<Transaction>;
+    findOneWithPopulate(_id: string, populateFields: string[]): Promise<Transaction>;
 }
 
 //Create TransactionRepositoryImpl class and implement TransactionRepository interface
@@ -39,7 +40,13 @@ export class TransactionRepositoryImpl implements ITransactionRepository {
       .populate('courseId')
       .exec();
   }
-
+  async findOneWithPopulate(_id: string, populateFields: string[]): Promise<Transaction> {
+    let query = this.transactionModel.findById(_id);
+    populateFields.forEach(field => {
+      query = query.populate(field);
+    });
+    return query.exec() as Promise<Transaction>;
+  }
   async findOne(id: string): Promise<Transaction> {
     const transaction = await this.transactionModel
       .findById(id)
