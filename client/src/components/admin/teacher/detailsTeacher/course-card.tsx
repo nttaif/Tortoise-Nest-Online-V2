@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { BookOpen } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface CourseCardProps {
   course: Course
@@ -16,7 +17,7 @@ export default function CourseCard({ course }: CourseCardProps) {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0 },
   }
-
+  const router = useRouter();
   // Format price with Vietnamese currency
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -81,7 +82,7 @@ export default function CourseCard({ course }: CourseCardProps) {
         </CardContent>
 
         <CardFooter className="pt-0">
-          <Button className="w-full gap-2">
+          <Button className="w-full gap-2" onClick={()=>{router.push('/admin/courses/SetupCoures')}}>
             <BookOpen size={16} />
             View Course
           </Button>

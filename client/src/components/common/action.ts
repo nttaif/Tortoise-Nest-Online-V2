@@ -2,11 +2,47 @@
 import api, { APIError } from "@/apis/common/lib/axios";
 import { InvalidCredentials, signIn } from "@/lib/auth"
 import { Course } from "@/types/Courses";
+import { Lesson } from "@/types/Lesson";
 import { ResponseListTeacherData } from "@/types/ResponseListTeacherData";
 import { Teacher } from "@/types/Teacher";
+import { UserType } from "@/types/UserType";
 import axios from "axios";
 //call to server
 //server returns response and we return to client
+interface SignUpData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  rePassword: string;
+}
+
+// Kiểu phản hồi khi đăng ký thành công
+interface SignUpSuccessResponse {
+  message: string;
+}
+
+// Kiểu phản hồi khi đăng ký thất bại
+interface SignUpErrorResponse {
+  message: string;
+  error: string;
+  statusCode: number;
+}
+
+export async function signUp(data: SignUpData): Promise<SignUpSuccessResponse | SignUpErrorResponse> {
+  try {
+    const response = await api.post<SignUpSuccessResponse>('/api/auth/signUp', { data });
+    console.log('response: ',response)
+    return response; // Trả về trực tiếp kết quả
+  } catch (error) {
+    if (error instanceof APIError && error.response) {
+      // Nếu APIError chứa phản hồi, trả về nó dưới dạng SignUpErrorResponse
+      return error.response as SignUpErrorResponse;
+    }
+    throw error;
+  }
+}
+
 export async function authenticate(username: string, password: string) {
   try {
     const r = await signIn("credentials", {
@@ -23,6 +59,9 @@ export async function authenticate(username: string, password: string) {
     return { error: "Unknown" };
   }
 }
+ 
+
+
 
 export async function reVerify(email: string) {
   try {
@@ -255,6 +294,16 @@ export async function getEnrollmentById(id: string) {
     return null;
   }
 }
+  export async function getEnrollmentsByUserId(userId: string) {
+    try {
+      const result = await api.get(`/api/enrollments/user/${userId}`);
+      return result;
+    } catch (error) {
+      console.error("getEnrollmentsByUserId error:", error);
+      return null; // Trả về null nếu có lỗi
+    }
+  }
+
 
 export async function addEnrollment(data: any) {
   try {
@@ -358,5 +407,102 @@ export async function removeTransaction(id: string) {
       return { error: error.message };
     }
     throw error;
+  }
+}
+export async function getLessonsByCourse(courseId: string) {
+  try {
+    const result = await api.get(`/api/lessons/course/${courseId}`);
+    return result;
+  } catch (error) {
+    console.error("getLessonsByCourse error:", error);
+    return [];
+  }
+}
+
+export async function getLessonById(id: string) {
+  try {
+    const result = await api.get(`/api/lessons/${id}`);
+    return result;
+  } catch (error) {
+    console.error("getLessonById error:", error);
+    return null;
+  }
+}
+
+export async function addLesson(data: any) {
+  try {
+    const result = await api.post("/api/lessons", {
+      data,
+    });
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+export async function updateLesson(id: string, data: any) {
+  try {
+    const result = await api.put(`/api/lessons/${id}`, {
+      data,
+    });
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+export async function removeLesson(id: string) {
+  try {
+    const result = await api.delete(`/api/lessons/${id}`);
+    return result;
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message };
+    }
+    throw error;
+  }
+}
+
+
+export async function getTeacherCourses(teacherId: string): Promise<{
+  activeCourses: Course[]
+  draftCourses: Course[]
+}> {
+  try {
+    const response = await api.get(`/api/courses/teacher/${teacherId}`)
+    const teacherCourses = response as Course[]
+
+    // Phân loại các khóa học thành active và draft
+    const activeCourses = teacherCourses.filter((course: Course) => course.status)
+    const draftCourses = teacherCourses.filter((course: Course) => !course.status)
+
+    return { activeCourses, draftCourses }
+  } catch (error) {
+    console.error("Error fetching teacher courses:", error)
+    return { activeCourses: [], draftCourses: [] }
+  }
+}
+
+export async function getCourseSchedule(courseId?: string): Promise<Lesson[]> {
+  try {
+    if (courseId!== undefined) {
+      const response = await api.get<Lesson[]>(`/api/lessons/schedules/${courseId}`)
+      console.log("Fetched sas:", response) // Kiểm tra dữ liệu đã lấy
+      return response
+    }else {
+      const response = await api.get<Lesson[]>(`/api/lessons/schedules`)
+      console.log("Fetched sas:", response) // Kiểm tra dữ liệu đã lấy
+      return response
+    }
+
+    
+  } catch (error) {
+    console.error("Error fetching course lessons:", error)
+    return []
   }
 }

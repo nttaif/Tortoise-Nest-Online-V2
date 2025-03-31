@@ -18,7 +18,6 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, pageSize, totalItems }: PaginationProps) {
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   const totalPages = Math.ceil(totalItems / pageSize)

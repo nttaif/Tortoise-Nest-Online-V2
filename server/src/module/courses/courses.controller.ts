@@ -16,7 +16,10 @@ export class CoursesController {
   findAll() {
     return this.coursesService.findAll();
   }
-
+  @Get('teacher/:teacherId')
+  findByTeacherId(@Param('teacherId') teacherId: string) {
+    return this.coursesService.findAllCoursesByTeacherId(teacherId);
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.coursesService.findOne(id);

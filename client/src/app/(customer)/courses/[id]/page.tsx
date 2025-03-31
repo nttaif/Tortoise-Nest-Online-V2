@@ -21,7 +21,6 @@ export default async function CoursePage({ params }: CoursePageProps) {
   if (!course) {
     notFound()
   }
-
   return (
     <div className="container mx-auto mt-10 ">
       <Link href="/courses">

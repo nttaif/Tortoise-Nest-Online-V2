@@ -1,25 +1,19 @@
 "use client"
-import React from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
-import {
-    Form,
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-  } from "@/components/ui/form"
-import { Input, InputWithOutline } from '@/components/ui/input'
-import { toast } from '@/hooks/use-toast'
-import { MailOpen } from 'lucide-react'
-import { FacebookIcon, GoogleIcon, GithubIcon } from '../../../../public/icon/icon'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { InputWithOutline } from "@/components/ui/input"
+import { toast } from "sonner"
+import React from "react"
+import { signUp } from "@/components/common/action"
+import { useRouter } from "next/navigation"
 
 const FormSchema = z
   .object({
+    firstName: z.string().min(1, { message: "First name is required." }),
+    lastName: z.string().min(1, { message: "Last name is required." }),
     email: z.string().email({ message: "Invalid email format." }),
     password: z
       .string()
@@ -30,42 +24,123 @@ const FormSchema = z
       .refine((value) => !/\s/.test(value), {
         message: "Password must not contain spaces.",
       }),
-    Repassword: z.string(),
+    rePassword: z.string(),
   })
-  .refine((data) => data.password === data.Repassword, {
+  .refine((data) => data.password === data.rePassword, {
     message: "Passwords do not match.",
-    path: ["Repassword"],
-  });
-  export default function FormRegisterComponents() {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
-        mode: "onChange",
-        defaultValues: {
-          email: "",
-          password: "",
-          Repassword: "",
-        },
+    path: ["rePassword"],
+  })
+
+export default function FormRegisterComponents() {
+  const router = useRouter();
+  React.useEffect(() => {
+    console.log("Form component loaded")
+  }, [])
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    mode: "onChange",
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      rePassword: "",
+    },
+  })
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      
+     const result = await signUp({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        rePassword: data.rePassword,
+     });
+     if(!result?.error){
+      toast.success(
+        "Registration Successful",
+        {
+        description: "There was an error submitting your registration.",
       })
-     
-      function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-          title: "You submitted the following values:",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-            </pre>
-          ),
-        })
-      }
+      router.push("/login");
+     }else{
+      toast.error(
+        "Registration failed",
+        {
+        description: "There was an error submitting your registration.",
+      })
+     }
+    } catch (error) {
+      console.error("Error submitting form:", error)
+      toast.error(
+        "Registration failed",
+        {
+        description: "There was an error submitting your registration.",
+      })
+    }
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
+      <form
+        onSubmit={form.handleSubmit(
+          (data) => {
+            console.log("Form valid, submitting:", data)
+            onSubmit(data)
+          },
+          (errors) => {
+            console.error("Form validation failed:", errors)
+            toast.error("Validation Error",{
+              description: "Please check the form for errors",
+            })
+          },
+        )}
+        className="w-full space-y-6"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <b>First Name</b> <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <InputWithOutline placeholder="Enter your first name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  <b>Last Name</b> <span className="text-red-500">*</span>
+                </FormLabel>
+                <FormControl>
+                  <InputWithOutline placeholder="Enter your last name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel><b>Email</b> <span className="text-red-500">*</span> </FormLabel>
+              <FormLabel>
+                <b>Email</b> <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
                 <InputWithOutline placeholder="Enter your email" {...field} />
               </FormControl>
@@ -73,53 +148,44 @@ const FormSchema = z
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel><b>Password</b> <span className="text-red-500">*</span> </FormLabel>
+              <FormLabel>
+                <b>Password</b> <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
-                <InputWithOutline  placeholder="Enter your password" {...field} type="password" />
+                <InputWithOutline placeholder="Enter your password" {...field} type="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-         <FormField
+
+        <FormField
           control={form.control}
-          name="Repassword"
+          name="rePassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel><b>Re-password</b> <span className="text-red-500">*</span> </FormLabel>
+              <FormLabel>
+                <b>Re-password</b> <span className="text-red-500">*</span>
+              </FormLabel>
               <FormControl>
-                <InputWithOutline  placeholder="Enter your Re-password" {...field} type="password" />
+                <InputWithOutline placeholder="Confirm your password" {...field} type="password" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <hr className="h-[0.1px] my-8 bg-gray-200 border-0 "></hr>
-        <div className="flex flex-col p-2 gap-4 w-full max-w-sm mx-auto">
-            <Button variant="outline" className="flex items-center justify-center gap-2 bg-white text-black hover:bg-[#FFFCFC] w-full">
-              <GoogleIcon  />
-              <span className="text-sm sm:text-base">Sign up with Google</span>
-            </Button>
-            
-            <Button className="flex items-center justify-center gap-2 w-full bg-blue-500 hover:bg-blue-600">
-              <FacebookIcon  />
-              <span className="text-sm sm:text-base">Sign up with Facebook</span>
-            </Button>
-
-            <Button variant="outline" className="flex items-center justify-center gap-2 w-full bg-white text-black hover:bg-[#FFFCFC]">
-              <GithubIcon  />
-              <span className="text-sm sm:text-base">Sign up with Github</span>
-            </Button>
-          </div>
+        <hr className="h-[0.1px] my-8 bg-gray-200 border-0"></hr>
         <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600">
-                 Create new account 
-       </Button>
+          Create new account
+        </Button>
       </form>
     </Form>
   )
 }
+
