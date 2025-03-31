@@ -3,33 +3,9 @@ import { motion } from "framer-motion";
 
 export default function EducationalLayout() {
   return (
-    <div className="container mx-auto py-16 px-6 lg:px-12 flex flex-col lg:flex-row items-center gap-16">
-      {/* Phần bên trái: Hình ảnh với hiệu ứng */}
-      <div className="relative max-w-2xl mx-auto lg:w-1/2">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <pattern id="dotPattern" width="20" height="20" patternUnits="userSpaceOnUse">
-              <circle cx="2" cy="2" r="1" fill="#000" />
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#dotPattern)" />
-          </svg>
-        </div>
-
-        {/* Hình ảnh chính */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 rounded-3xl overflow-hidden shadow-xl"
-          style={{ maxWidth: "550px" }}
-        >
-          <img src="/images/student-2.jpg" alt="Student with notebook" className="w-full h-auto rounded-3xl" />
-        </motion.div>
-          </div>
-
+    <div>
       {/* Phần bên phải: Nội dung */}
-      <div className="lg:w-1/2 text-center lg:text-left">
+      <div >
         <h4 className="text-teal-500 font-semibold uppercase text-lg lg:text-xl">Get to Know Us</h4>
         <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mt-3 leading-snug">
           Grow your skills <br /> learn with us from anywhere

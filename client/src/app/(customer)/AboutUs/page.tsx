@@ -2,6 +2,13 @@ import BannerAboutUs from "@/components/aboutus/banner.component";
 import ImageAboutUs from "@/components/aboutus/Image.component";
 import ProfileCard from "@/components/aboutus/profilecard.component";
 import Pattern from "@/components/aboutus/pattern.component";
+import EducationalLayout from "@/components/home/DiscoverMore.components";
+import HeaderAuth from "@/components/home/HeaderHome.components";
+import { Footer } from "@/components/admin/student/footer";
+import FooterAuth from "@/components/home/Footer.component";
+import { CourseCard } from "@/components/home/course-card";
+import CourseCategoriesComponents from "@/components/home/course-categories.components";
+import { PopularCourses } from "@/components/home/popular-courses";
 
 const profiles = [
   { name: "Edward Norton", role: "Artist", image: "/images/LongNguyen.jpg" },
@@ -18,46 +25,18 @@ const AboutUsPage = () => {
       <section className="container mx-auto px-6 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
           <ImageAboutUs/>
-
           {/* Content */}
           <div>
-            <h3 className="text-green-500 font-semibold">GET TO KNOW US</h3>
-            <h2 className="text-3xl font-bold mt-2">
-              Grow your skills, learn with us from anywhere
-            </h2>
-            <p className="text-gray-600 mt-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed
-              eiusmod tempor incididunt labore dolore magna aliqua enim.
-            </p>
-
-            {/* Features */}
-            <div className="mt-6 grid grid-cols-2 gap-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-red-500 text-xl">✔</span>
-                <span>Expert trainers</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-blue-500 text-xl">✔</span>
-                <span>Online learning</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-yellow-500 text-xl">✔</span>
-                <span>Lifetime access</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-green-500 text-xl">✔</span>
-                <span>Great results</span>
-              </div>
-            </div>
-
-            {/* Button */}
-            <button className="mt-6 px-6 py-3 bg-black text-white rounded-lg shadow-md hover:bg-gray-800 transition">
-              Discover More
-            </button>
+            <EducationalLayout/>
           </div>
         </div>
       </section>
       
+      {/*CourseCard*/}
+      <div>
+        <PopularCourses/>
+      </div>
+
       {/*Pattern Courses*/}
       <Pattern/>
 
@@ -79,7 +58,7 @@ const AboutUsPage = () => {
           </div>
         </div>
       </section>
-      
+      <FooterAuth/>
     </div>
   );
 };
