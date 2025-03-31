@@ -409,9 +409,6 @@ export async function removeTransaction(id: string) {
     throw error;
   }
 }
-
-
-// LESSONS
 export async function getLessonsByCourse(courseId: string) {
   try {
     const result = await api.get(`/api/lessons/course/${courseId}`);
