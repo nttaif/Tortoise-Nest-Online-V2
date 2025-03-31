@@ -33,7 +33,6 @@ export function TransactionFilters({ onApplyFilters }: TransactionFiltersProps) 
     setDateFrom(undefined)
     setDateTo(undefined)
     setItemsPerPage("5")
-
     // Apply reset filters
     onApplyFilters("", "", undefined, undefined, 5)
   }

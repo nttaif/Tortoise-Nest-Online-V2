@@ -8,6 +8,7 @@ export interface PaginatedCourses {
   currentPage: number
 }
 
+
 // This is a server-side function to fetch courses with pagination
 export async function getCourses(page = 1, limit = 10): Promise<PaginatedCourses> {
   // In a real application, you would fetch from your database or API

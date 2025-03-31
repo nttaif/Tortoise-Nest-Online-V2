@@ -31,6 +31,20 @@ export class CoursesService {
         createCourseDto
       };
   }
+  
+  async findAllCoursesByTeacherId(teacherId: string) {
+    if (!Types.ObjectId.isValid(teacherId)) {
+      throw new BadRequestException('Invalid Teacher Id');
+    }
+    return this.coursesModel
+      .find({ teacherId: new Types.ObjectId(teacherId) }) // Chuyển đổi sang ObjectId
+      .populate({
+        path: 'teacherId',
+        select: '-password -__v', // Loại bỏ các trường nhạy cảm
+      })
+      .exec();
+  }
+
 
   async findAll() {
     return await this.coursesModel.find().populate({

@@ -11,6 +11,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { CoursesModule } from './module/courses/courses.module';
 import { TransactionsModule } from './module/transactions/transactions.module';
 import { EnrollmentsModule } from './module/enrollments/enrollments.module';
+import { LessonsModule } from './module/lessons/lessons.module';
+import { TransactionsService } from './module/transactions/transactions.service';
+import { EnrollmentUpdater } from './module/observers/enrollment-updater';
+import { EmailObserver } from './module/observers/email-observer';
+import { LoggerObserver } from './module/observers/logger-observer';
 
 const infrastructureDatabaseModule = MongooseModule.forRootAsync({
   useClass: MongooseConfigService,
@@ -31,6 +36,7 @@ const infrastructureDatabaseModule = MongooseModule.forRootAsync({
     TransactionsModule,
     EnrollmentsModule,
     CoursesModule,
+    LessonsModule,
     MailerModule.forRootAsync({
     imports: [ConfigModule],
     useFactory: async (configService:ConfigService) => ({
@@ -60,5 +66,22 @@ const infrastructureDatabaseModule = MongooseModule.forRootAsync({
     inject: [ConfigService],
   }),
   ],
+  providers: [
+    EnrollmentUpdater,
+    EmailObserver,
+    LoggerObserver,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(
+    private readonly transactionsService: TransactionsService,
+    private readonly enrollmentUpdater: EnrollmentUpdater,
+    private readonly emailObserver: EmailObserver,
+    private readonly loggerObserver: LoggerObserver,
+  ) {
+    // Đăng ký observers trong constructor
+    this.transactionsService.registerObserver(this.enrollmentUpdater);
+    this.transactionsService.registerObserver(this.emailObserver);
+    this.transactionsService.registerObserver(this.loggerObserver);
+  }
+}

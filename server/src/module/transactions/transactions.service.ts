@@ -1,60 +1,71 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { InjectModel } from '@nestjs/mongoose';
-import { Transaction, TransactionDocument } from './schemas/transaction.schema';
-import { Model, Types } from 'mongoose';
+import { Transaction } from './schemas/transaction.schema';
+import { ITransactionRepository } from './repository/transaction.repository';
+import { Observer } from '../observers/observer.interface';
+
+
+export const TRANSACTION_REPOSITORY = 'TRANSACTION_REPOSITORY';
 
 @Injectable()
 export class TransactionsService {
+  private observers: Observer[] = [];
   constructor(
-    @InjectModel(Transaction.name)
-    private transactionModel: Model<TransactionDocument>,
-  ) {}
-  async create(createTransactionDto: CreateTransactionDto): Promise<Transaction>{
-    const createdTransaction = new this.transactionModel({
-      ...createTransactionDto,
-      userId: new Types.ObjectId(createTransactionDto.userId),
-      courseId: new Types.ObjectId(createTransactionDto.courseId),
+    @Inject(TRANSACTION_REPOSITORY)
+    private transactionRepo: ITransactionRepository,
+  ) {
+    console.log('TransactionsService initialized. Observers:', this.observers.length);
+  }
+
+  registerObserver(observer: Observer): void {
+    this.observers.push(observer);
+     console.log(`Registered observer: ${observer.constructor.name}`);
+  }
+  removeObserver(observer: Observer): void {
+    this.observers = this.observers.filter(obs => obs !== observer);
+  }
+  private notifyObservers(transaction: Transaction): void {
+    console.log('Notifying observers...', this.observers.length);
+    this.observers.forEach(observer => {
+      console.log(`Calling update on observer: ${observer.constructor.name}`);
+      observer.update(transaction);
     });
-    return createdTransaction.save();
+  }
+
+  
+  async getTransaction(_id: string): Promise<Transaction> {
+    const populatedTransaction = await this.transactionRepo.findOneWithPopulate(_id, [
+      'userId',
+      'courseId',
+    ]);
+    return populatedTransaction;
+  }
+  async create(createTransactionDto: CreateTransactionDto): Promise<Transaction>{
+    return this.transactionRepo.create(createTransactionDto);
   }
 
   async findAll(): Promise<Transaction[]> {
-    return this.transactionModel.find()
-      .populate('userId', '-password')
-      .populate('courseId')
-      .exec();
+    return this.transactionRepo.findAll();
   }
-
+  
   async findOne(_id: string): Promise<Transaction> {
-    const transaction = await this.transactionModel.findById(_id)
-      .populate('userId', '-password')
-      .populate('courseId')
-      .exec();
-    if (!transaction) {
-      throw new NotFoundException(`Transaction with id ${_id} not found`);
-    }
-    return transaction;
+    return this.transactionRepo.findOne(_id);
   }
 
   async update(_id: string, updateTransactionDto: UpdateTransactionDto): Promise<Transaction> {
-    const updatedTransaction = await this.transactionModel.findByIdAndUpdate(
-      _id,
-      updateTransactionDto,
-      { new: true },
-    ).exec();
-    if (!updatedTransaction) {
-      throw new NotFoundException(`Transaction with id ${_id} not found`);
-    }
-    return updatedTransaction;
+    const updatedTransaction = await this.transactionRepo.update(_id, updateTransactionDto);
+    const populatedTransaction = await this.transactionRepo.findOneWithPopulate(_id, [
+      'userId',
+      'courseId',
+    ]);
+    console.log(`Calling update on Transaction: ${populatedTransaction._id}`);
+    console.log('Before notifying, observers count:', this.observers.length);
+    this.notifyObservers(populatedTransaction);
+    return populatedTransaction;
   }
 
   async remove(_id: string): Promise<Transaction> {
-    const deletedTransaction = await this.transactionModel.findByIdAndDelete(_id).exec();
-    if (!deletedTransaction) {
-      throw new NotFoundException(`Transaction with id ${_id} not found`);
-    }
-    return deletedTransaction;
+    return this.transactionRepo.remove(_id);
   }
 }

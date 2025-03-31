@@ -32,4 +32,8 @@ export class Course {
 
 }
 export const CoursesSchema = SchemaFactory.createForClass(Course);
-
+CoursesSchema.virtual("lessons", {
+    ref: "Lesson",
+    localField: "_id",
+    foreignField: "courseId",
+});

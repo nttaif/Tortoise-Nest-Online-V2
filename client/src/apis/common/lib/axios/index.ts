@@ -25,7 +25,7 @@ const PUBLIC_ROUTES = [
   '/auth/re-verify',
   '/user',
   '/auth/verify',
-  '/auth/signup',
+  '/auth/signUp',
   '/auth/signout',
 ] as const;
 

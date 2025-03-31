@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,17 +10,72 @@ import { TeacherProfile } from "./teacher-profile"
 import type { Course } from "@/types/Courses"
 import { Calendar, Clock, Users, BookOpen, CheckCircle } from "lucide-react"
 import { PaymentForm } from "./enrollment-form"
+import type { IEnrollment } from "@/types/IEnrollment"
+import { getEnrollmentsByUserId, getLessonsByCourse } from "../common/action"
+import CourseLessonsList from "./course-lessons-list"
+import { Lesson } from "@/types/Lesson"
 
 interface CourseDetailsProps {
-  userID?:string;
+  userID?: string
   course: Course
 }
 
-export default function CourseDetails({ course,userID }: CourseDetailsProps) {
+export default function CourseDetails({ course, userID }: CourseDetailsProps) {
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(false)
+  const [isEnrolled, setIsEnrolled] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [lessons, setLessons] = useState<Lesson[]>([])
+  const [isLoadingLessons, setIsLoadingLessons] = useState(true)
 
   // Calculate discounted price if discount exists
   const finalPrice = course.discount ? course.price - (course.price * course.discount) / 100 : course.price
+
+  // Check if user is already enrolled in this course
+  useEffect(() => {
+    async function checkEnrollment() {
+      if (!userID) {
+        setIsLoading(false)
+        return
+      }
+
+      try {
+        setIsLoading(true)
+        const enrollments = await getEnrollmentsByUserId(userID)
+
+        if (enrollments && Array.isArray(enrollments)) {
+          const enrolled = enrollments.some((enrollment: IEnrollment) => {
+            const courseId =
+              typeof enrollment.courseId === "string" ? enrollment.courseId : (enrollment.courseId as any)._id
+            return courseId === course._id && enrollment.enrollmentStatus !== "cancelled"
+          })
+          setIsEnrolled(enrolled)
+        }
+      } catch (error) {
+        console.error("Error checking enrollment:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    checkEnrollment()
+  }, [userID, course._id])
+
+  // Fetch lessons for the course
+  useEffect(() => {
+    async function fetchLessons() {
+      setIsLoadingLessons(true)
+      try {
+        const listData = await getLessonsByCourse(course._id) as Lesson[];
+        setLessons(listData || [])
+      } catch (error) {
+        console.error("Error fetching lessons:", error)
+        setLessons([])
+      } finally {
+        setIsLoadingLessons(false)
+      }
+    }
+    fetchLessons()
+  }, [course._id])
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -28,7 +83,9 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
         <div>
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <Badge variant="outline">{course.category}</Badge>
-            {course.discount && course.discount > 0 ? ( <Badge className="bg-red-500">Giảm {course.discount}%</Badge>): null}
+            {course.discount && course.discount > 0 ? (
+              <Badge className="bg-red-500">Giảm {course.discount}%</Badge>
+            ) : null}
             {!course.status && <Badge variant="destructive">Không khả dụng</Badge>}
           </div>
 
@@ -84,7 +141,6 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
               <h3 className="text-xl font-semibold mb-3">Mô tả khóa học</h3>
               <p className="text-muted-foreground whitespace-pre-line">
                 {course.description}
-                {/* Thêm mô tả chi tiết hơn */}
                 {"\n\n"}
                 Khóa học này được thiết kế để giúp bạn nắm vững các kỹ năng cần thiết trong lĩnh vực {course.category}.
                 Bạn sẽ được học từ những giảng viên có nhiều kinh nghiệm trong ngành và được thực hành thông qua các bài
@@ -116,26 +172,11 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
           <TabsContent value="curriculum" className="space-y-4 pt-4">
             <h3 className="text-xl font-semibold mb-3">Nội dung khóa học</h3>
             <div className="space-y-3">
-              {Array.from({ length: 4 }).map((_, moduleIndex) => (
-                <div key={moduleIndex} className="border rounded-lg overflow-hidden">
-                  <div className="bg-muted p-4">
-                    <h4 className="font-medium">
-                      Module {moduleIndex + 1}: Chủ đề chính #{moduleIndex + 1}
-                    </h4>
-                  </div>
-                  <div className="divide-y">
-                    {Array.from({ length: 3 }).map((_, lessonIndex) => (
-                      <div key={lessonIndex} className="p-4 flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">Bài {moduleIndex * 3 + lessonIndex + 1}:</span>
-                          <span className="text-sm">Tiêu đề bài học #{moduleIndex * 3 + lessonIndex + 1}</span>
-                        </div>
-                        <span className="text-xs text-muted-foreground">45 phút</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              {isLoadingLessons ? (
+                <p>Đang tải lessons...</p>
+              ) : (
+                <CourseLessonsList lessons={lessons} courseId={course._id} />
+              )}
             </div>
           </TabsContent>
 
@@ -173,7 +214,15 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
                 </div>
 
                 <div className="space-y-3">
-                  {showEnrollmentForm ? (
+                  {isLoading ? (
+                    <Button className="w-full" size="lg" disabled>
+                      Đang tải...
+                    </Button>
+                  ) : isEnrolled ? (
+                    <Button className="w-full" size="lg" variant="secondary" disabled>
+                      Đã tham gia
+                    </Button>
+                  ) : showEnrollmentForm ? (
                     <PaymentForm userID={userID} course={course} onCancel={() => setShowEnrollmentForm(false)} />
                   ) : (
                     <Button
@@ -224,4 +273,3 @@ export default function CourseDetails({ course,userID }: CourseDetailsProps) {
     </div>
   )
 }
-

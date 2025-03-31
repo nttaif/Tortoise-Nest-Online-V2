@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import type { UserType } from "@/types/UserType"
+import ButtonClient from "../DesignPattren/button-client"
 
 export default function UserProfile({ user }: { user: UserType }) {
   const { toast } = useToast()
@@ -124,9 +125,10 @@ export default function UserProfile({ user }: { user: UserType }) {
                     className="hidden"
                     onChange={handleFileChange}
                   />
-                  <Button onClick={() => document.getElementById("avatar-upload")?.click()} className="w-full">
-                    Chọn ảnh
-                  </Button>
+                  <ButtonClient
+                   label={"Thêm ảnh"} 
+                    onClick={() =>document.getElementById("avatar-upload")?.click()}
+                   /> 
                 </div>
               </div>
             </div>
