@@ -1,6 +1,12 @@
 import PictureMainAuthComponents from "@/components/auth/login/picture.main.auth.components";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function LayoutAuth({ children }: { children: React.ReactNode }) {
+export default async function LayoutAuth({ children }: { children: React.ReactNode }) {
+  const session = await auth()
+  if(session){
+    redirect('/')
+  }
   return (
     <div className="flex min-h-screen relative">
       {/* Bubble Background */}

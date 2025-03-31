@@ -8,6 +8,8 @@ export type Course = {
     discount?: number
     category: string
     status: boolean
-    teacherId: Teacher
+    teacherId:  Teacher
+    createdAt: string;
+    updatedAt: string;
   }
   

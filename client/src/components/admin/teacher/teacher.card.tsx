@@ -73,12 +73,14 @@ import { Card, CardFooter } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { Teacher } from "@/types/Teacher"
 import FormTeacherComponent from "./form.teacher"
+import { useRouter } from "next/navigation"
 
 interface TeacherCardProps {
   teacher: Teacher
 }
 
 export function TeacherCard({ teacher }: TeacherCardProps) {
+  const router= useRouter()
   return (
     <Card className="overflow-hidden p-4 max-w-sm">
       <div className=" right-4 top-4">
@@ -136,7 +138,7 @@ export function TeacherCard({ teacher }: TeacherCardProps) {
       </div>
 
       <CardFooter className="grid grid-cols-2 gap-4 mt-6">
-        <Button className="w-full bg-[#4D44B5] hover:bg-[#413a9a]/90 text-white" size="lg">
+        <Button className="w-full bg-[#4D44B5] hover:bg-[#413a9a]/90 text-white" size="lg"onClick={() => router.push(`/admin/teachers/teacher-detail/${teacher._id}`)}>
           Profile
         </Button>
         <Button className="border-[#ebebf9] w-full bg-[#ebebf9] hover:bg-[#c8c8d4]/90 text-[#303972]" size="lg">

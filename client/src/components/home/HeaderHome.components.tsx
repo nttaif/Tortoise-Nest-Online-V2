@@ -32,12 +32,12 @@ import { RiArrowDropDownLine, RiMenuLine, RiSearch2Line } from "@remixicon/react
 const components_courses = [
     {
         title: "Tất cả khóa học",
-        href: "/Client/courses",
+        href: "/courses",
         description: "Xem tất cả các khóa học có sẵn.",
     },
     {
         title: "Công nghệ",
-        href: "/Client/courses?category=Technology",
+        href: "/courses?category=Technology",
         description: "Các khóa học về công nghệ thông tin và lập trình.",
     },
     {
@@ -49,24 +49,6 @@ const components_courses = [
         title: "Giáo dục",
         href: "/Client/courses?category=Education",
         description: "Các khóa học về phương pháp giảng dạy và giáo dục.",
-    },
-]
-
-const components_page = [
-    {
-        title: "Thông tin về chúng tôi",
-        href: "/Client/aboutUs",
-        description: "Tìm hiểu thêm về Tortoise Nest Online.",
-    },
-    {
-        title: "Tất cả giảng viên của chúng tôi",
-        href: "/DangQuynh",
-        description: "Danh sách các giảng viên tại Tortoise Nest Online.",
-    },
-    {
-        title: "Liên hệ",
-        href: "/Client/aboutUs",
-        description: "Thông tin liên hệ và hỗ trợ.",
     },
 ]
 
@@ -97,7 +79,7 @@ export default function HeaderAuth({ session }) {
     const router = useRouter()
     const [isSearchOpen, setIsSearchOpen] = useState(false)
     return (
-        <header className="h-24 w-full border-b-2 content-center text-center bg-white sticky top-0 z-50">
+        <header className="h-24 w-full border-b-2 content-center text-center bg-white">
             <div className="container px-10 min-w-full flex justify-between items-center">
                 <div className="flex items-center gap-4">
                     <Sheet>
@@ -145,23 +127,15 @@ export default function HeaderAuth({ session }) {
                                     </ul>
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <NavigationMenuTrigger className="text-base font-medium text-[#161439] hover:text-[#0d6efd]">
-                                    Phân trang
-                                </NavigationMenuTrigger>
+                            <NavigationMenuItem className="text-base font-medium text-[#161439] hover:text-[#0d6efd]" >
+                                    <a href="home/AboutUs">About Us</a>
                                 <NavigationMenuContent>
-                                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                                        {components_page.map((item) => (
-                                            <ListItem key={item.title} title={item.title} href={item.href}>
-                                                {item.description}
-                                            </ListItem>
-                                        ))}
-                                    </ul>
+                                   
                                 </NavigationMenuContent>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
                                 <NavigationMenuTrigger className="text-base font-medium text-[#161439] hover:text-[#0d6efd]">
-                                    Dashboard
+                                    Thông tin thêm
                                 </NavigationMenuTrigger>
                                 <NavigationMenuContent>
                                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
@@ -260,19 +234,10 @@ function MobileNav() {
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="pages">
-                    <AccordionTrigger>Phân trang</AccordionTrigger>
-                    <AccordionContent>
-                        <div className="flex flex-col gap-2">
-                            {components_page.map((item) => (
-                                <Link key={item.title} href={item.href} className="text-sm">
-                                    {item.title}
-                                </Link>
-                            ))}
-                        </div>
-                    </AccordionContent>
+                    <AccordionTrigger><a href="/home/AboutUs">About Us</a></AccordionTrigger>
                 </AccordionItem>
                 <AccordionItem value="dashboard">
-                    <AccordionTrigger>Dashboard</AccordionTrigger>
+                    <AccordionTrigger>Chi tiết thêm</AccordionTrigger>
                     <AccordionContent>
                         <div className="flex flex-col gap-2">
                             {components_dashboard.map((item) => (

@@ -29,11 +29,14 @@ const isTokenExpired = (exp?: number): boolean => {
 declare module "next-auth" {
   interface User {
     access_token: string;
+    role:string;
     exp: number;
   }
 
   interface Session {
-    user: User & DefaultSession["user"];
+    user:{
+      role:string
+    } & DefaultSession["user"];
   }
 }
 
@@ -66,9 +69,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           // If no user details are found, return null
           if (!userResponse) throw new UserNotFound();
           // return user object with their profile data
+
           return {
             id: userResponse._id,
             name: `${userResponse.firstName} ${userResponse.lastName}`,
+            role:userResponse.role,
             email: userResponse.email,
             access_token: response.access_token,
             exp: response.exp,
@@ -93,6 +98,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }  
         session.user = {
           ...session.user,
+          role: token.role as string,
           id: token.sub!,
           access_token: token.access_token as string,
           exp: token.exp!,
@@ -104,6 +110,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.sub = user.id;
         token.access_token = user.access_token;
+        token.role = user.role;
         token.exp = user.exp;
       }
       return token;

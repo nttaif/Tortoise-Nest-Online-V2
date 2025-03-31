@@ -6,6 +6,7 @@ import { CourseDetailsSkeleton } from "@/components/courses/course-details-skele
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { auth } from "@/lib/auth"
 
 interface CoursePageProps {
   params: {
@@ -14,9 +15,9 @@ interface CoursePageProps {
 }
 
 export default async function CoursePage({ params }: CoursePageProps) {
+  const session = await auth();
   const courseId = await params.id
   const course = await getCourseById(courseId)
-
   if (!course) {
     notFound()
   }
@@ -30,7 +31,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
         </Button>
       </Link>
       <Suspense fallback={<CourseDetailsSkeleton />}>
-        <CourseDetails course={course} />
+        <CourseDetails course={course} userID ={session?.user.id}/>
       </Suspense>
     </div>
   )

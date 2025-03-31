@@ -44,45 +44,45 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/dashboard",
+          url: "/admin/dashboard",
         },
         {
           title: "Finance",
-          url: "/finance",
+          url: "/admin/finance",
         },
       ],
     },
     {
       title: "Students",
-      url: "/students",
+      url: "/admin/students",
       icon: Ticket,
       items: [
         {
           title: "All Student",
-          url: "/students",
+          url: "/admin/students",
         },
         {
           title: "Add New Student",
-          url: "/students/add",
+          url: "/admin/students/add",
         },
       ],
     },
     {
       title: "Teachers",
-      url: "/teachers",
+      url: "/admin/teachers",
       icon: Building2,
       items: [
         {
           title: "All Teachers",
-          url: "/teachers",
+          url: "/admin/teachers",
         },
         {
           title: "Add New Teacher",
-          url: "teachers/",
+          url: "/admin/teachers/",
         },
         {
           title: "Teacher Deatils",
-          url: "teachers/",
+          url: "/admin/teachers/",
         },
       ],
     },
@@ -93,7 +93,7 @@ const data = {
       items: [
         {
           title: "All Courses",
-          url: "/courses",
+          url: "/admin/courses",
         },
         
       ],
@@ -105,7 +105,7 @@ const data = {
       items: [
         {
           title: "Profile",
-          url: "/profile",
+          url: "/admin/profile",
         },
         {
           title: "Edit Profile",
