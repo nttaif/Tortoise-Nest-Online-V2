@@ -18,7 +18,6 @@ export class TransactionsService {
     console.log('TransactionsService initialized. Observers:', this.observers.length);
   }
 
-  // Observer pattern methods
   registerObserver(observer: Observer): void {
     this.observers.push(observer);
      console.log(`Registered observer: ${observer.constructor.name}`);
@@ -33,6 +32,8 @@ export class TransactionsService {
       observer.update(transaction);
     });
   }
+
+  
   async getTransaction(_id: string): Promise<Transaction> {
     const populatedTransaction = await this.transactionRepo.findOneWithPopulate(_id, [
       'userId',

@@ -9,16 +9,6 @@ export class EmailObserver implements Observer {
   constructor(private mailerService: MailerService) {}
 
   async update(transaction: Transaction): Promise<void> {
-//     const userEmail =transaction.userId['email'];
-//     const subject = `Cập nhật trạng thái giao dịch: ${transaction.status}`;
-//     const message = `Giao dịch của bạn cho khóa học ${transaction.courseId} đã được cập nhật thành ${transaction.status}.`;
-//     await this.mailerService.sendMail({
-//       to: userEmail,
-//       subject,
-//       text: message,
-//     }).catch(() => {});
-//     console.log(`Email sent to ${userEmail} regarding transaction ${transaction._id}`);
-//   }
     if (transaction.status !== 'Success') {
         return;
     }

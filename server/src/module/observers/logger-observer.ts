@@ -1,4 +1,3 @@
-// observers/logger-observer.ts
 import { Injectable } from '@nestjs/common';
 import { Transaction } from '../transactions/schemas/transaction.schema';
 import { Observer } from './observer.interface';
