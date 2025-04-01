@@ -13,10 +13,18 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { FileText } from "lucide-react"
 import Link from "next/link"
+import { getAllCourses, getEnrollments, getListTeacher, getTransactions } from "@/components/common/action"
 
 export default function DashboardTabs() {
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("overview")
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    activeEnrollments: 0,
+    activeCourses: 0,
+    activeTeachers: 0,
+  })
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const tab = searchParams.get("tab")
@@ -24,6 +32,55 @@ export default function DashboardTabs() {
       setActiveTab(tab)
     }
   }, [searchParams])
+
+  useEffect(() => {
+    const fetchDashboardStats = async () => {
+      try {
+        setLoading(true)
+        const [coursesData, teachersData, enrollmentsData, transactionsData] = await Promise.all([
+          getAllCourses(),
+          getListTeacher(),
+          getEnrollments(),
+          getTransactions(),
+        ])
+
+        // Tính tổng doanh thu từ các giao dịch thành công
+        const totalRevenue = transactionsData
+          ? (transactionsData as any[]).filter((t) => t.status === "Success").reduce((sum, t) => sum + t.amount, 0)
+          : 0
+
+        // Tính số lượng đăng ký hoạt động
+        const activeEnrollments = enrollmentsData
+          ? (enrollmentsData as any[]).filter((e) => e.enrollmentStatus === "active").length
+          : 0
+
+        // Tính số lượng khóa học hoạt động
+        const activeCourses = coursesData ? (coursesData as any[]).filter((c) => c.status).length : 0
+
+        // Tính số lượng giảng viên hoạt động
+        const activeTeachers =
+          teachersData && teachersData.results ? teachersData.results.filter((t) => t.isActive).length : 0
+
+        setStats({
+          totalRevenue,
+          activeEnrollments,
+          activeCourses,
+          activeTeachers,
+        })
+      } catch (error) {
+        console.error("Error fetching dashboard stats:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardStats()
+  }, [])
+
+  // Tính phần trăm tăng trưởng (giả lập)
+  const getRandomGrowth = (min: number, max: number) => {
+    return (Math.random() * (max - min) + min).toFixed(1)
+  }
 
   return (
     <Tabs defaultValue={activeTab} className="space-y-4">
@@ -37,7 +94,7 @@ export default function DashboardTabs() {
         </TabsList>
 
         <Button asChild variant="outline" className="flex items-center">
-          <Link href="/admin/report">
+          <Link href="/reports">
             <FileText className="mr-2 h-4 w-4" />
             Báo cáo
           </Link>
@@ -63,8 +120,8 @@ export default function DashboardTabs() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$45,231.89</div>
-              <p className="text-xs text-muted-foreground">+20.1% từ tháng trước</p>
+              <div className="text-2xl font-bold">${stats.totalRevenue.toFixed(2)}</div>
+              <p className="text-xs text-muted-foreground">+{getRandomGrowth(15, 25)}% từ tháng trước</p>
             </CardContent>
           </Card>
 
@@ -87,8 +144,8 @@ export default function DashboardTabs() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">+2350</div>
-              <p className="text-xs text-muted-foreground">+180.1% từ tháng trước</p>
+              <div className="text-2xl font-bold">{stats.activeEnrollments}</div>
+              <p className="text-xs text-muted-foreground">+{getRandomGrowth(10, 20)}% từ tháng trước</p>
             </CardContent>
           </Card>
 
@@ -110,8 +167,8 @@ export default function DashboardTabs() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">127</div>
-              <p className="text-xs text-muted-foreground">+19% từ tháng trước</p>
+              <div className="text-2xl font-bold">{stats.activeCourses}</div>
+              <p className="text-xs text-muted-foreground">+{getRandomGrowth(5, 15)}% từ tháng trước</p>
             </CardContent>
           </Card>
 
@@ -135,8 +192,8 @@ export default function DashboardTabs() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">15</div>
-              <p className="text-xs text-muted-foreground">+5% từ tháng trước</p>
+              <div className="text-2xl font-bold">{stats.activeTeachers}</div>
+              <p className="text-xs text-muted-foreground">+{getRandomGrowth(2, 8)}% từ tháng trước</p>
             </CardContent>
           </Card>
         </div>
@@ -154,7 +211,7 @@ export default function DashboardTabs() {
           <Card className="col-span-3">
             <CardHeader>
               <CardTitle>Giao dịch gần đây</CardTitle>
-              <CardDescription>Bạn đã thực hiện 265 giao dịch trong tháng này.</CardDescription>
+              <CardDescription>Các giao dịch mới nhất trong hệ thống.</CardDescription>
             </CardHeader>
             <CardContent>
               <RecentSales />
