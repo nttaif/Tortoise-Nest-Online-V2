@@ -30,16 +30,7 @@ export class Lesson {
     ],
     default: [],
   })
-  contents: {
-    title: string;
-    description: string;
-    contentType: "video" | "document";
-    url: string;
-    duration?: number;
-    documentType?: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }[];
+  contents: Content[];
 
   @Prop({ required: true })
   order: number;
@@ -63,6 +54,7 @@ export class Lesson {
     default: [],
   })
   scheduledTime: {
+    _id: Types.ObjectId;
     teacherId: Types.ObjectId;
     startTime: Date;
     endTime: Date;
@@ -74,3 +66,14 @@ export class Lesson {
 }
 
 export const LessonSchema = SchemaFactory.createForClass(Lesson);
+export interface Content {
+  _id: Types.ObjectId;
+  title: string;
+  description: string;
+  contentType: "video" | "document";
+  url: string;
+  duration?: number;
+  documentType?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

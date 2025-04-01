@@ -5,7 +5,7 @@ export type ContentType = 'video' | 'document';
 export type DocumentType = 'word' | 'ppt' | 'pdf';
 
 export interface LessonContent {
-  _id: string;
+  _id?: string;
   title: string;
   description?: string;
   contentType: ContentType;
@@ -29,7 +29,7 @@ export interface Lesson {
 }
 
 export interface LessonSchedule {
-  _id: string;
+  _id?: string;
   lessonId: string | Lesson;
   teacherId: string | Teacher;
   startTime: string; // ISO date string

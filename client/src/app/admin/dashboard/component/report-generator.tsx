@@ -26,8 +26,6 @@ export function ReportGenerator() {
   const [progress, setProgress] = useState(0);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Initialize dates after component mounts to avoid hydration mismatch
   useEffect(() => {
     setDateRange({
       from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -106,7 +104,6 @@ export function ReportGenerator() {
     if (format === 'csv') {
       mimeType = 'text/csv;charset=utf-8;';
       fileExtension = 'csv';
-      
       // Create CSV content
       if (Array.isArray(data)) {
         // Get headers

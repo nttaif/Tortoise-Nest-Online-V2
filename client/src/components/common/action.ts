@@ -506,3 +506,69 @@ export async function getCourseSchedule(courseId?: string): Promise<Lesson[]> {
     return []
   }
 }
+export async function getLessons() {
+  try {
+    const result = await api.get("/api/lessons")
+    return result
+  } catch (error) {
+    console.error("getLessons error:", error)
+    return []
+  }
+}
+export async function updateLessonContent(lessonId: string, content: any, contentId?: string) {
+  try {
+    let url = `/api/lessons/${lessonId}/contents`
+    if (contentId) {
+      url += `/${contentId}`
+    }
+    const result = await api.post(url, {
+      data: content,
+    })
+    return result
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message }
+    }
+    throw error
+  }
+}
+export async function deleteLessonContent(lessonId: string, contentId: string) {
+  try {
+    const result = await api.delete(`/api/lessons/${lessonId}/contents/${contentId}`)
+    return result
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message }
+    }
+    throw error
+  }
+}
+
+export async function updateLessonSchedule(lessonId: string, schedule: any, scheduleId?: string) {
+  try {
+    let url = `/api/lessons/${lessonId}/schedules`
+    if (scheduleId) {
+      url += `/${scheduleId}`
+    }
+    const result = await api.post(url, {
+      data: schedule,
+    })
+    return result
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message }
+    }
+    throw error
+  }
+}
+export async function deleteLessonSchedule(lessonId: string, scheduleId: string) {
+  try {
+    const result = await api.delete(`/api/lessons/${lessonId}/schedules/${scheduleId}`)
+    return result
+  } catch (error) {
+    if (error instanceof APIError) {
+      return { error: error.message }
+    }
+    throw error
+  }
+}

@@ -65,6 +65,11 @@ const data = {
           title: "Add New Student",
           url: "/admin/students/add",
         },
+        {
+          title: "Enrollment Management",
+          url: "/admin/students/ManageEnrollment",
+        },
+        
       ],
     },
     {
@@ -95,6 +100,10 @@ const data = {
           title: "All Courses",
           url: "/admin/courses",
         },
+        {
+          title: "Lesson Management",
+          url: "/admin/lessons",  
+        },
         
       ],
     },
@@ -115,12 +124,12 @@ const data = {
     },
     {
       title: "Settings",
-      url: "/settings",
+      url: "/admin/settings",
       icon: Settings,
       items: [
         {
           title: "Settings",
-          url: "/settings",
+          url: "/admin/settings",
         },
       ],
     },
