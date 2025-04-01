@@ -33,7 +33,7 @@ export async function signUp(data: SignUpData): Promise<SignUpSuccessResponse | 
   try {
     const response = await api.post<SignUpSuccessResponse>('/api/auth/signUp', { data });
     console.log('response: ',response)
-    return response; // Trả về trực tiếp kết quả
+    return response;
   } catch (error) {
     if (error instanceof APIError && error.response) {
       // Nếu APIError chứa phản hồi, trả về nó dưới dạng SignUpErrorResponse

@@ -1,70 +1,35 @@
-import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTableDemo } from "@/components/admin/table/table.teacherdetail";
-import StatsDashboard from "@/components/admin/main/dashboard/stats.dashboard";
-import SidebarDashboard from "@/components/admin/main/dashboard/sidebar.dashboard";
-import ChartPerfomance from "@/components/admin/main/dashboard/chart.perfomance";
-import ChartOverview from "@/components/admin/main/dashboard/chart.overview";
-import { getListTeacher } from "@/components/common/action";
-import { StudentTable } from "@/components/admin/table/table.student";
+import type { Metadata } from "next"
+import DashboardTabs from "./component/dashboard-tabs"
+import DateRangePicker from "./component/date-range-picker"
+import { Suspense } from "react"
+import { DashboardSkeleton } from "./component/dashboard-skeleton"
 
+export const metadata: Metadata = {
+  title: "Dashboard | Course Management System",
+  description: "Analytics and reporting dashboard for course management",
+}
 
-const DashboardPage = async() => {
-  const getListTeachers = await getListTeacher();
+export default function DashboardPage() {
   return (
-    <div className="flex flex-col lg:flex-row p-2 py-4">
-      <div className="flex-grow space-y-6 px-3">
-        {/* Thống kê */}
-        <StatsDashboard/>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Biểu đồ 1 */}
-          <ChartPerfomance/>
-          {/* Biểu đồ 2 */}
-          <ChartOverview/>
-        </div>
+    <div className="flex min-h-screen flex-col">
+      <div className="flex-1">
+        <div className="container grid items-start gap-4 py-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+              <p className="text-muted-foreground">
+                Analytics and reporting for your courses, enrollments, and transactions
+              </p>
+            </div>
+            <DateRangePicker />
+          </div>
 
-        {/* Lịch */}
-        <div className="w-full flex flex-col lg:flex-row gap-4 mt-6">
-          {/* School Calendar */}
-          <Card className="shadow-lg text-[#303972] text-xl font-semibold">
-            <CardHeader>
-              <CardTitle>School Calendar</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Calendar className="w-full max-w-md h-auto p-4 "/>
-            </CardContent>
-          </Card>
-
-          {/* Teacher Details */}
-          <Card className="flex-1 min-w-[300px] shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-[#303972] text-xl font-semibold">List Teacher:</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <DataTableDemo data={getListTeachers}/>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Student */}
-        <div className="w-full mt-6">
-          <Card className="flex-1 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-[#303972] text-xl font-semibold">Student</CardTitle>
-            </CardHeader>
-
-            <CardContent>
-              <StudentTable></StudentTable>
-            </CardContent>
-          </Card>
+          <Suspense fallback={<DashboardSkeleton />}>
+            <DashboardTabs />
+          </Suspense>
         </div>
       </div>
-
-      {/* Sidebar bên phải */}
-      <SidebarDashboard/>
     </div>
-  );
-};
+  )
+}
 
-export default DashboardPage;
